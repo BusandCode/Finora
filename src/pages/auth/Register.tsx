@@ -1,31 +1,38 @@
 import React from 'react';
-import { Eye, ArrowRight, Sparkles, ShieldCheck, Clock, TrendingUp } from 'lucide-react';
+import {
+  Eye,
+  ArrowRight,
+  Sparkles,
+  ShieldCheck,
+  TrendingUp,
+  Users,
+} from 'lucide-react';
 
 interface FeatureProps {
   icon: React.ReactNode;
   title: string;
   children: React.ReactNode;
 }
+
 const Feature: React.FC<FeatureProps> = ({ icon, title, children }) => {
   return (
     <div className="flex items-start gap-4">
-      <div className="mt-1 text-[#1DBF73]">
-        {icon}
-      </div>
+      <div className="mt-1 text-[#1DBF73]">{icon}</div>
       <div>
-        <h4 className="font-semibold text-white">{title}</h4>
-        <p className="text-white/70 text-sm mt-1">{children}</p>
+        <h3 className="font-semibold text-lg">{title}</h3>
+        <p className="text-slate-500 mt-1">{children}</p>
       </div>
     </div>
   );
 };
-const Login: React.FC = () => {
+
+const Register: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#F5F7FA] relative overflow-hidden font-['Outfit',sans-serif]">
 
       {/* Floating Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute w-125 h-125 rounded-full blur-[90px] opacity-15 bg-linear-to-br from-[#0A2540] to-[#1DBF73] -top-32 -left-32 animate-float"></div>
+        <div className="absolute w-130 h-130 rounded-full blur-[90px] opacity-15 bg-linear-to-br from-[#0A2540] to-[#1DBF73] -top-40 -left-40 animate-float"></div>
         <div className="absolute w-105 h-105 rounded-full blur-[90px] opacity-15 bg-linear-to-br from-[#3B82F6] to-[#1DBF73] bottom-0 right-0 animate-float-delayed"></div>
       </div>
 
@@ -46,47 +53,58 @@ const Login: React.FC = () => {
             </div>
 
             <h2 className="text-4xl font-semibold leading-tight mb-4">
-              Smarter Loans.<br />Better Decisions.
+              Start Your Financial<br />Journey Today
             </h2>
             <p className="text-white/70 max-w-md mb-12">
-              Access flexible loans, transparent terms, and instant approvals designed
-              for your financial growth.
+              Create your Finora account and gain access to fast loans,
+              flexible repayments, and transparent pricing.
             </p>
 
-            {/* Features */}
+            {/* Benefits */}
             <div className="space-y-6">
-              <Feature icon={<TrendingUp />} title="Fast Approvals">
-                Get loan decisions in minutes, not days.
+              <Feature icon={<TrendingUp />} title="Instant Access">
+                Apply for loans and track progress in real time.
               </Feature>
-              <Feature icon={<ShieldCheck />} title="Secure & Encrypted">
-                Bank-grade security protects your data.
+              <Feature icon={<ShieldCheck />} title="Secure by Design">
+                Industry-grade encryption keeps your data safe.
               </Feature>
-              <Feature icon={<Clock />} title="Flexible Repayment">
-                Plans that adapt to your income.
+              <Feature icon={<Users />} title="Trusted Platform">
+                Join over 150,000 users growing financially with Finora.
               </Feature>
             </div>
           </div>
 
-          {/* Bottom */}
+          {/* Footer */}
           <div className="border-t border-white/10 pt-6 text-sm text-white/60">
-            Trusted by <span className="text-[#1DBF73] font-semibold">150,000+</span> customers • Rated 4.9★
+            Regulated • Transparent • Trusted
           </div>
         </aside>
 
-        {/* Login Section */}
+        {/* Register Form */}
         <main className="flex flex-1 items-center justify-center px-6 py-12">
           <div className="w-full max-w-md bg-white rounded-3xl p-10 shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
 
             <div className="text-center mb-8">
               <h3 className="text-2xl font-semibold text-[#0A2540] mb-1">
-                Welcome Back
+                Create Your Account
               </h3>
               <p className="text-slate-500">
-                Sign in to continue with Finora
+                Get started with Finora in minutes
               </p>
             </div>
 
             <form className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium text-[#1F2937] mb-1">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="John Doe"
+                  className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl border-2 border-transparent focus:border-[#1DBF73] focus:bg-white outline-none transition"
+                />
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-[#1F2937] mb-1">
                   Email Address
@@ -105,7 +123,7 @@ const Login: React.FC = () => {
                 <div className="relative">
                   <input
                     type="password"
-                    placeholder="Enter your password"
+                    placeholder="Create a password"
                     className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl border-2 border-transparent focus:border-[#1DBF73] focus:bg-white outline-none transition"
                   />
                   <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
@@ -114,48 +132,52 @@ const Login: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between text-sm">
-                <label className="flex items-center gap-2 text-[#1F2937]">
-                  <input type="checkbox" className="accent-[#1DBF73]" />
-                  Remember me
+              <div>
+                <label className="block text-sm font-medium text-[#1F2937] mb-1">
+                  Confirm Password
                 </label>
-                <span className="text-[#3B82F6] cursor-pointer hover:underline">
-                  Forgot password?
-                </span>
+                <input
+                  type="password"
+                  placeholder="Confirm password"
+                  className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl border-2 border-transparent focus:border-[#1DBF73] focus:bg-white outline-none transition"
+                />
               </div>
 
               <button
                 type="button"
                 className="w-full py-3.5 text-white font-semibold rounded-xl bg-linear-to-br from-[#1DBF73] to-[#17a865] hover:-translate-y-0.5 transition flex items-center justify-center gap-2 shadow"
               >
-                Sign In
+                Create Account
                 <ArrowRight size={18} />
               </button>
             </form>
 
             {/* Divider */}
-            <div className="relative my-8 text-center">
+            <div className="relative my-4 text-center">
               <div className="absolute inset-x-0 top-1/2 h-px bg-slate-200"></div>
               <span className="relative bg-white px-4 text-sm text-slate-500">
-                or continue with
+                or sign up with
               </span>
             </div>
 
-            {/* Google UI */}
+            {/* Google (UI Only)
             <button
               type="button"
               className="w-full flex items-center justify-center gap-3 py-3 border-2 border-slate-200 rounded-xl font-medium hover:border-[#1DBF73] hover:bg-[#f8fffe] transition"
             >
               <svg width="20" height="20" viewBox="0 0 24 24">
-                <path fill="#EA4335" d="M12 10.2v3.6h5.1c-.2 1.3-1.5 3.8-5.1 3.8-3.1 0-5.6-2.6-5.6-5.6S8.9 6.4 12 6.4c1.8 0 3 .7 3.7 1.3l2.5-2.4C16.7 3.8 14.6 3 12 3 7.6 3 4 6.6 4 12s3.6 9 8 9c4.6 0 7.6-3.2 7.6-7.7 0-.5-.1-.9-.1-1.1H12z"/>
+                <path
+                  fill="#EA4335"
+                  d="M12 10.2v3.6h5.1c-.2 1.3-1.5 3.8-5.1 3.8-3.1 0-5.6-2.6-5.6-5.6S8.9 6.4 12 6.4c1.8 0 3 .7 3.7 1.3l2.5-2.4C16.7 3.8 14.6 3 12 3 7.6 3 4 6.6 4 12s3.6 9 8 9c4.6 0 7.6-3.2 7.6-7.7 0-.5-.1-.9-.1-1.1H12z"
+                />
               </svg>
               Continue with Google
-            </button>
+            </button> */}
 
-            <div className="text-center text-sm text-slate-500 mt-8">
-              Don’t have an account?{' '}
+            <div className="text-center text-sm text-slate-500">
+              Already have an account?{' '}
               <span className="text-[#1DBF73] font-semibold cursor-pointer hover:underline">
-                Sign up for free
+                Sign in
               </span>
             </div>
           </div>
@@ -180,4 +202,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Register;
