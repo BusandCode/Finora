@@ -1,5 +1,5 @@
 import { type FC, useState, type ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 interface DashboardLayoutProps {
@@ -9,6 +9,7 @@ interface DashboardLayoutProps {
 const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // 🔹 Get current route
   const { logout } = useAuth();
 
   const handleNavigate = (path: string) => {
@@ -21,6 +22,15 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
     setOpen(false);
     navigate("/login");
   };
+
+  const menuItems = [
+    { label: "Dashboard", path: "/user/dashboard" },
+    { label: "Apply Loan", path: "/user/apply-loan" },
+    { label: "My Loans", path: "/user/my-loans" },
+    { label: "Repayments", path: "/user/repayments" },
+    { label: "Transactions", path: "/user/transactions" },
+    { label: "Profile", path: "/user/profile" },
+  ];
 
   return (
     <div className="flex min-h-screen bg-[#F5F7FA]">
@@ -49,12 +59,14 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
               <button onClick={() => setOpen(false)}>✕</button>
             </div>
             <nav className="space-y-2">
-              <NavItem label="Dashboard" onClick={() => handleNavigate("/user/dashboard")} active />
-              <NavItem label="Apply Loan" onClick={() => handleNavigate("/user/apply-loan")} />
-              <NavItem label="My Loans" onClick={() => handleNavigate("/user/my-loans")} />
-              <NavItem label="Repayments" onClick={() => handleNavigate("/user/repayments")} />
-              <NavItem label="Transactions" onClick={() => handleNavigate("/user/transactions")} />
-              <NavItem label="Profile" onClick={() => handleNavigate("/user/profile")} />
+              {menuItems.map((item) => (
+                <NavItem
+                  key={item.path}
+                  label={item.label}
+                  active={location.pathname === item.path} // 🔹 dynamic active
+                  onClick={() => handleNavigate(item.path)}
+                />
+              ))}
             </nav>
           </div>
           <button
@@ -71,12 +83,14 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
         <div className="p-6">
           <h1 className="text-2xl font-bold mb-10 tracking-tight">Finora</h1>
           <nav className="space-y-2">
-            <NavItem label="Dashboard" onClick={() => handleNavigate("/user/dashboard")} active />
-            <NavItem label="Apply Loan" onClick={() => handleNavigate("/user/apply-loan")} />
-            <NavItem label="My Loans" onClick={() => handleNavigate("/user/my-loans")} />
-            <NavItem label="Repayments" onClick={() => handleNavigate("/user/repayments")} />
-            <NavItem label="Transactions" onClick={() => handleNavigate("/user/transactions")} />
-            <NavItem label="Profile" onClick={() => handleNavigate("/user/profile")} />
+            {menuItems.map((item) => (
+              <NavItem
+                key={item.path}
+                label={item.label}
+                active={location.pathname === item.path} // 🔹 dynamic active
+                onClick={() => handleNavigate(item.path)}
+              />
+            ))}
           </nav>
         </div>
         <div className="p-6 space-y-4">
@@ -113,5 +127,3 @@ const NavItem: FC<NavItemProps> = ({ label, active, onClick }) => (
 );
 
 export default DashboardLayout;
-
-
