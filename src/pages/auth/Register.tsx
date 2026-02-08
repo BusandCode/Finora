@@ -86,7 +86,7 @@ const Register: React.FC = () => {
         </aside>
 
         {/* Register Form */}
-        <main className="flex flex-1 items-center justify-center px-6 py-12">
+        <main className="flex flex-1 items-center justify-center  md:px-6 px-3 py-6  md:py-12">
           <div className="w-full max-w-md bg-white rounded-3xl p-10 shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
 
             <div className="text-center mb-8">

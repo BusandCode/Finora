@@ -30,6 +30,9 @@ const Login: React.FC = () => {
   const handleSignIn = () => {
     navigate('/register'); // Redirect to register page after sign in
   }
+  const handleLogin = () => {
+    navigate('/user'); // Redirect to user dashboard after sign in
+  }
   return (
     <div className="min-h-screen bg-[#F5F7FA] relative overflow-hidden font-['Outfit',sans-serif]">
 
@@ -84,8 +87,8 @@ const Login: React.FC = () => {
         </aside>
 
         {/* Login Section */}
-        <main className="flex flex-1 items-center justify-center px-6 py-12">
-          <div className="w-full max-w-md bg-white rounded-3xl p-10 shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+        <main className="flex flex-1 items-center justify-center md:px-6 px-3 py-6  md:py-12">
+          <div className="w-full md:max-w-md bg-white rounded-3xl p-10 shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
 
             <div className="text-center mb-8">
               <h3 className="text-2xl font-semibold text-[#0A2540] mb-1">
@@ -136,6 +139,7 @@ const Login: React.FC = () => {
 
               <button
                 type="button"
+                onClick={handleLogin}
                 className="w-full py-3.5 text-white font-semibold rounded-xl bg-linear-to-br from-[#1DBF73] to-[#17a865] hover:-translate-y-0.5 transition flex items-center justify-center gap-2 shadow"
               >
                 Sign In
@@ -154,7 +158,7 @@ const Login: React.FC = () => {
             {/* Google UI */}
             <button
               type="button"
-              className="w-full flex items-center justify-center gap-3 py-3 border-2 border-slate-200 rounded-xl font-medium hover:border-[#1DBF73] hover:bg-[#f8fffe] transition"
+              className="w-full text-slate-500 flex items-center justify-center gap-3 py-3 border-2 border-slate-200 rounded-xl font-medium hover:border-[#1DBF73] hover:bg-[#f8fffe] transition"
             >
               <svg width="20" height="20" viewBox="0 0 24 24">
                 <path fill="#EA4335" d="M12 10.2v3.6h5.1c-.2 1.3-1.5 3.8-5.1 3.8-3.1 0-5.6-2.6-5.6-5.6S8.9 6.4 12 6.4c1.8 0 3 .7 3.7 1.3l2.5-2.4C16.7 3.8 14.6 3 12 3 7.6 3 4 6.6 4 12s3.6 9 8 9c4.6 0 7.6-3.2 7.6-7.7 0-.5-.1-.9-.1-1.1H12z"/>
