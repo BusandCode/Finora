@@ -10,6 +10,7 @@ import ApplyLoan from "./pages/user/ApplyLoan";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
 import MyLoans from "./pages/user/MyLoans";
+import LandingPage from "./pages/landing/LandingPage";
 
 function App() {
   const { user } = useAuth();
@@ -57,7 +58,7 @@ function App() {
 
         {/* ================= DEFAULT & 404 ================= */}
         <Route path="/login" element={<Navigate to="/login" replace />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<LandingPage/>} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
