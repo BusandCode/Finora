@@ -3,6 +3,8 @@ import { type FC, useState } from "react";
 const UserSidebar: FC = () => {
   const [open, setOpen] = useState(false);
 
+  const closeSidebar = () => setOpen(false);
+
   return (
     <>
       {/* Mobile Header */}
@@ -31,7 +33,7 @@ const UserSidebar: FC = () => {
       {open && (
         <div
           className="fixed inset-0 bg-black/40 z-40 lg:hidden"
-          onClick={() => setOpen(false)}
+          onClick={closeSidebar}
         />
       )}
 
@@ -40,26 +42,24 @@ const UserSidebar: FC = () => {
         className={`fixed top-0 left-0 h-full w-64 bg-[#0A2540] text-white z-50 transform transition-transform duration-300 lg:hidden
         ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="p-6 flex flex-col h-full justify-between">
+        <div className="p-6 pt-8 flex flex-col h-full justify-between">
           <div>
             {/* Header */}
             <div className="flex items-center justify-between mb-10">
               <h1 className="text-2xl font-bold">Finora</h1>
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Close menu"
-              >
+              <button onClick={closeSidebar} aria-label="Close menu">
                 ✕
               </button>
             </div>
 
             {/* Navigation */}
-            <nav className="space-y-3">
-              <NavItem active>Dashboard</NavItem>
-              <NavItem>My Loans</NavItem>
-              <NavItem>Repayments</NavItem>
-              <NavItem>Transactions</NavItem>
-              <NavItem>Profile</NavItem>
+            <nav className="space-y-2">
+              <NavItem active onClick={closeSidebar}>Dashboard</NavItem>
+              <NavItem onClick={closeSidebar}>Apply Loan</NavItem>
+              <NavItem onClick={closeSidebar}>My Loans</NavItem>
+              <NavItem onClick={closeSidebar}>Repayments</NavItem>
+              <NavItem onClick={closeSidebar}>Transactions</NavItem>
+              <NavItem onClick={closeSidebar}>Profile</NavItem>
             </nav>
           </div>
 
@@ -70,14 +70,15 @@ const UserSidebar: FC = () => {
       </aside>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-64 bg-[#0A2540] text-white flex-col justify-between">
+      <aside className="hidden lg:flex w-64 bg-[#0A2540] text-white flex-col justify-between min-h-screen">
         <div className="p-6">
           <h1 className="text-2xl font-bold mb-10 tracking-tight">
             Finora
           </h1>
 
-          <nav className="space-y-3">
+          <nav className="space-y-2">
             <NavItem active>Dashboard</NavItem>
+            <NavItem>Apply Loan</NavItem>
             <NavItem>My Loans</NavItem>
             <NavItem>Repayments</NavItem>
             <NavItem>Transactions</NavItem>
@@ -89,6 +90,9 @@ const UserSidebar: FC = () => {
           © {new Date().getFullYear()} Finora
         </div>
       </aside>
+
+      {/* Spacer for mobile header */}
+      <div className="lg:hidden h-16" />
     </>
   );
 };
@@ -98,11 +102,13 @@ const UserSidebar: FC = () => {
 interface NavItemProps {
   children: string;
   active?: boolean;
+  onClick?: () => void;
 }
 
-const NavItem: FC<NavItemProps> = ({ children, active }) => (
+const NavItem: FC<NavItemProps> = ({ children, active, onClick }) => (
   <a
-    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition
+    onClick={onClick}
+    className={`cursor-pointer flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition
       ${
         active
           ? "bg-[#1DBF73] text-[#0A2540]"
