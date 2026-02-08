@@ -9,6 +9,7 @@ import ApplyLoan from "./pages/user/ApplyLoan";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
+import MyLoans from "./pages/user/MyLoans";
 
 function App() {
   const { user } = useAuth();
@@ -45,8 +46,17 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/user/my-loans"
+          element={
+            <ProtectedRoute>
+              <MyLoans />
+            </ProtectedRoute>
+          }
+        />
 
         {/* ================= DEFAULT & 404 ================= */}
+        <Route path="/login" element={<Navigate to="/login" replace />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
