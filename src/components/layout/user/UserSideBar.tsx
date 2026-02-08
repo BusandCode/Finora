@@ -1,13 +1,21 @@
 import { type FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
 const UserSidebar: FC = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { logout } = useAuth(); // 🔹 Get logout function
 
   const handleNavigate = (path: string) => {
     navigate(path);
     setOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout(); // Clear auth state
+    setOpen(false); // Close mobile sidebar
+    navigate("/login"); // Redirect to login
   };
 
   return (
@@ -15,8 +23,6 @@ const UserSidebar: FC = () => {
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#0A2540] flex items-center justify-between px-4 py-4">
         <h1 className="text-lg font-bold text-white">Finora</h1>
-
-        {/* Hamburger */}
         <button
           onClick={() => setOpen(true)}
           className="text-white"
@@ -62,6 +68,14 @@ const UserSidebar: FC = () => {
               <NavItem label="Transactions" onClick={() => handleNavigate("/user/transactions")} />
               <NavItem label="Profile" onClick={() => handleNavigate("/user/profile")} />
             </nav>
+
+            {/* Logout */}
+            <button
+              onClick={handleLogout}
+              className="w-full mt-6 px-4 py-3 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition font-medium"
+            >
+              Logout
+            </button>
           </div>
 
           <p className="text-sm text-gray-400">
@@ -73,9 +87,7 @@ const UserSidebar: FC = () => {
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex w-64 bg-[#0A2540] text-white flex-col justify-between">
         <div className="p-6">
-          <h1 className="text-2xl font-bold mb-10 tracking-tight">
-            Finora
-          </h1>
+          <h1 className="text-2xl font-bold mb-10 tracking-tight">Finora</h1>
 
           <nav className="space-y-2">
             <NavItem label="Dashboard" onClick={() => handleNavigate("/user/dashboard")} active />
@@ -87,8 +99,18 @@ const UserSidebar: FC = () => {
           </nav>
         </div>
 
-        <div className="p-6 text-sm text-gray-400">
-          © {new Date().getFullYear()} Finora
+        {/* Desktop Logout */}
+        <div className="p-6 space-y-4">
+          <button
+            onClick={handleLogout}
+            className="w-full px-4 py-3 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition font-medium"
+          >
+            Logout
+          </button>
+
+          <p className="text-sm text-gray-400">
+            © {new Date().getFullYear()} Finora
+          </p>
         </div>
       </aside>
     </>
@@ -96,7 +118,6 @@ const UserSidebar: FC = () => {
 };
 
 /* ---------- Nav Item ---------- */
-
 interface NavItemProps {
   label: string;
   active?: boolean;
@@ -107,11 +128,7 @@ const NavItem: FC<NavItemProps> = ({ label, active, onClick }) => (
   <button
     onClick={onClick}
     className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition
-      ${
-        active
-          ? "bg-[#1DBF73] text-[#0A2540]"
-          : "hover:bg-[#081f35] text-white"
-      }`}
+      ${active ? "bg-[#1DBF73] text-[#0A2540]" : "hover:bg-[#081f35] text-white"}`}
   >
     {label}
   </button>
