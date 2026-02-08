@@ -73,3 +73,8 @@
 body {
   font-family: var(--font-outfit);
 }
+
+html{
+  scroll-behavior: smooth;
+  
+}
