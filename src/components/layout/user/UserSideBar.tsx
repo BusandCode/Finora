@@ -55,12 +55,12 @@ const UserSidebar: FC = () => {
             </div>
 
             <nav className="space-y-2">
-              <NavItem label="Dashboard" onClick={() => handleNavigate("/dashboard")} active />
-              <NavItem label="Apply Loan" onClick={() => handleNavigate("/loan-application")} />
-              <NavItem label="My Loans" onClick={() => handleNavigate("/my-loans")} />
-              <NavItem label="Repayments" onClick={() => handleNavigate("/repayments")} />
-              <NavItem label="Transactions" onClick={() => handleNavigate("/transactions")} />
-              <NavItem label="Profile" onClick={() => handleNavigate("/profile")} />
+              <NavItem label="Dashboard" onClick={() => handleNavigate("/user/dashboard")} active />
+              <NavItem label="Apply Loan" onClick={() => handleNavigate("/user/apply-loan")} />
+              <NavItem label="My Loans" onClick={() => handleNavigate("/user/my-loans")} />
+              <NavItem label="Repayments" onClick={() => handleNavigate("/user/repayments")} />
+              <NavItem label="Transactions" onClick={() => handleNavigate("/user/transactions")} />
+              <NavItem label="Profile" onClick={() => handleNavigate("/user/profile")} />
             </nav>
           </div>
 
@@ -78,12 +78,12 @@ const UserSidebar: FC = () => {
           </h1>
 
           <nav className="space-y-2">
-            <NavItem label="Dashboard" onClick={() => handleNavigate("/dashboard")} active />
-            <NavItem label="Apply Loan" onClick={() => handleNavigate("/loan-application")} />
-            <NavItem label="My Loans" onClick={() => handleNavigate("/my-loans")} />
-            <NavItem label="Repayments" onClick={() => handleNavigate("/repayments")} />
-            <NavItem label="Transactions" onClick={() => handleNavigate("/transactions")} />
-            <NavItem label="Profile" onClick={() => handleNavigate("/profile")} />
+            <NavItem label="Dashboard" onClick={() => handleNavigate("/user/dashboard")} active />
+            <NavItem label="Apply Loan" onClick={() => handleNavigate("/user/apply-loan")} />
+            <NavItem label="My Loans" onClick={() => handleNavigate("/user/my-loans")} />
+            <NavItem label="Repayments" onClick={() => handleNavigate("/user/repayments")} />
+            <NavItem label="Transactions" onClick={() => handleNavigate("/user/transactions")} />
+            <NavItem label="Profile" onClick={() => handleNavigate("/user/profile")} />
           </nav>
         </div>
 
