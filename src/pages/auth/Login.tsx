@@ -31,7 +31,7 @@ const Login: React.FC = () => {
     navigate('/register'); // Redirect to register page after sign in
   }
   const handleLogin = () => {
-    navigate('/user'); // Redirect to user dashboard after sign in
+    navigate('/user/dashboard'); // Redirect to user dashboard after sign in
   }
   return (
     <div className="min-h-screen bg-[#F5F7FA] relative overflow-hidden font-['Outfit',sans-serif]">

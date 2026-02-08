@@ -1,9 +1,14 @@
 import { type FC, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const UserSidebar: FC = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const closeSidebar = () => setOpen(false);
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    setOpen(false);
+  };
 
   return (
     <>
@@ -14,14 +19,14 @@ const UserSidebar: FC = () => {
         {/* Hamburger */}
         <button
           onClick={() => setOpen(true)}
-          className="text-white focus:outline-none"
+          className="text-white"
           aria-label="Open menu"
         >
           <svg
             className="w-6 h-6"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            strokeWidth={2}
             viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
@@ -33,7 +38,7 @@ const UserSidebar: FC = () => {
       {open && (
         <div
           className="fixed inset-0 bg-black/40 z-40 lg:hidden"
-          onClick={closeSidebar}
+          onClick={() => setOpen(false)}
         />
       )}
 
@@ -42,24 +47,20 @@ const UserSidebar: FC = () => {
         className={`fixed top-0 left-0 h-full w-64 bg-[#0A2540] text-white z-50 transform transition-transform duration-300 lg:hidden
         ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="p-6 pt-8 flex flex-col h-full justify-between">
+        <div className="p-6 flex flex-col h-full justify-between">
           <div>
-            {/* Header */}
             <div className="flex items-center justify-between mb-10">
               <h1 className="text-2xl font-bold">Finora</h1>
-              <button onClick={closeSidebar} aria-label="Close menu">
-                ✕
-              </button>
+              <button onClick={() => setOpen(false)}>✕</button>
             </div>
 
-            {/* Navigation */}
             <nav className="space-y-2">
-              <NavItem active onClick={closeSidebar}>Dashboard</NavItem>
-              <NavItem onClick={closeSidebar}>Apply Loan</NavItem>
-              <NavItem onClick={closeSidebar}>My Loans</NavItem>
-              <NavItem onClick={closeSidebar}>Repayments</NavItem>
-              <NavItem onClick={closeSidebar}>Transactions</NavItem>
-              <NavItem onClick={closeSidebar}>Profile</NavItem>
+              <NavItem label="Dashboard" onClick={() => handleNavigate("/dashboard")} active />
+              <NavItem label="Apply Loan" onClick={() => handleNavigate("/loan-application")} />
+              <NavItem label="My Loans" onClick={() => handleNavigate("/my-loans")} />
+              <NavItem label="Repayments" onClick={() => handleNavigate("/repayments")} />
+              <NavItem label="Transactions" onClick={() => handleNavigate("/transactions")} />
+              <NavItem label="Profile" onClick={() => handleNavigate("/profile")} />
             </nav>
           </div>
 
@@ -70,19 +71,19 @@ const UserSidebar: FC = () => {
       </aside>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex w-64 bg-[#0A2540] text-white flex-col justify-between min-h-screen">
+      <aside className="hidden lg:flex w-64 bg-[#0A2540] text-white flex-col justify-between">
         <div className="p-6">
           <h1 className="text-2xl font-bold mb-10 tracking-tight">
             Finora
           </h1>
 
           <nav className="space-y-2">
-            <NavItem active>Dashboard</NavItem>
-            <NavItem>Apply Loan</NavItem>
-            <NavItem>My Loans</NavItem>
-            <NavItem>Repayments</NavItem>
-            <NavItem>Transactions</NavItem>
-            <NavItem>Profile</NavItem>
+            <NavItem label="Dashboard" onClick={() => handleNavigate("/dashboard")} active />
+            <NavItem label="Apply Loan" onClick={() => handleNavigate("/loan-application")} />
+            <NavItem label="My Loans" onClick={() => handleNavigate("/my-loans")} />
+            <NavItem label="Repayments" onClick={() => handleNavigate("/repayments")} />
+            <NavItem label="Transactions" onClick={() => handleNavigate("/transactions")} />
+            <NavItem label="Profile" onClick={() => handleNavigate("/profile")} />
           </nav>
         </div>
 
@@ -90,33 +91,30 @@ const UserSidebar: FC = () => {
           © {new Date().getFullYear()} Finora
         </div>
       </aside>
-
-      {/* Spacer for mobile header */}
-      <div className="lg:hidden h-16" />
     </>
   );
 };
 
-/* ---------- Reusable Nav Item ---------- */
+/* ---------- Nav Item ---------- */
 
 interface NavItemProps {
-  children: string;
+  label: string;
   active?: boolean;
-  onClick?: () => void;
+  onClick: () => void;
 }
 
-const NavItem: FC<NavItemProps> = ({ children, active, onClick }) => (
-  <a
+const NavItem: FC<NavItemProps> = ({ label, active, onClick }) => (
+  <button
     onClick={onClick}
-    className={`cursor-pointer flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition
+    className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition
       ${
         active
           ? "bg-[#1DBF73] text-[#0A2540]"
-          : "hover:bg-[#081f35]"
+          : "hover:bg-[#081f35] text-white"
       }`}
   >
-    {children}
-  </a>
+    {label}
+  </button>
 );
 
 export default UserSidebar;
