@@ -1,1 +1,75 @@
 @import "tailwindcss";
+
+/* Custom CSS variables for Tailwind v4 */
+@theme {
+  /* Custom Colors */
+  --color-finora-navy: #0a2540;
+  --color-finora-emerald: #1dbf73;
+  --color-finora-light: #f5f7fa;
+  --color-finora-dark: #1f2937;
+  --color-finora-accent: #3b82f6;
+
+  /* Font Families */
+  --font-outfit: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --font-dm-serif: 'DM Serif Display', ui-serif, Georgia, serif;
+  --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+
+  /* Custom Animations */
+  --animate-float: float 20s infinite ease-in-out;
+  --animate-float-delayed-7: float 20s infinite ease-in-out -7s;
+  --animate-float-delayed-14: float 20s infinite ease-in-out -14s;
+  --animate-slide-in-left: slide-in-left 0.8s ease-out;
+  --animate-slide-in-right: slide-in-right 0.8s ease-out;
+  --animate-pulse-soft: pulse-soft 2s ease-in-out infinite;
+}
+
+/* Keyframe Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(100px, -100px) scale(1.1);
+  }
+  66% {
+    transform: translate(-50px, 50px) scale(0.9);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 8px 24px rgba(29, 191, 115, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 12px 32px rgba(29, 191, 115, 0.4);
+  }
+}
+
+/* Set default font for body */
+body {
+  font-family: var(--font-outfit);
+}

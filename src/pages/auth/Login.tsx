@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, ArrowRight, Sparkles, ShieldCheck, Clock, TrendingUp } from 'lucide-react';
 
 interface FeatureProps {
@@ -20,6 +21,15 @@ const Feature: React.FC<FeatureProps> = ({ icon, title, children }) => {
   );
 };
 const Login: React.FC = () => {
+  const navigate = useNavigate();
+  const handleForgotPassword = () => {
+    // Simulate forgot password logic here (e.g., API call)
+    // On success:
+    navigate('/forgot-password'); // Redirect to forgot password page after forgot password 
+  }
+  const handleSignIn = () => {
+    navigate('/register'); // Redirect to register page after sign in
+  }
   return (
     <div className="min-h-screen bg-[#F5F7FA] relative overflow-hidden font-['Outfit',sans-serif]">
 
@@ -119,7 +129,7 @@ const Login: React.FC = () => {
                   <input type="checkbox" className="accent-[#1DBF73]" />
                   Remember me
                 </label>
-                <span className="text-[#3B82F6] cursor-pointer hover:underline">
+                <span onClick={handleForgotPassword} className="text-[#3B82F6] cursor-pointer hover:underline">
                   Forgot password?
                 </span>
               </div>
@@ -154,7 +164,7 @@ const Login: React.FC = () => {
 
             <div className="text-center text-sm text-slate-500 mt-8">
               Don’t have an account?{' '}
-              <span className="text-[#1DBF73] font-semibold cursor-pointer hover:underline">
+              <span onClick={handleSignIn} className="text-[#1DBF73] font-semibold cursor-pointer hover:underline">
                 Sign up for free
               </span>
             </div>

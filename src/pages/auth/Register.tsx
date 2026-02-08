@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Eye,
   ArrowRight,
@@ -27,6 +28,10 @@ const Feature: React.FC<FeatureProps> = ({ icon, title, children }) => {
 };
 
 const Register: React.FC = () => {
+  const navigate = useNavigate()
+  const handleLogin = () => {
+    navigate('/login'); // Redirect to login page after sign in
+  }
   return (
     <div className="min-h-screen bg-[#F5F7FA] relative overflow-hidden font-['Outfit',sans-serif]">
 
@@ -176,7 +181,7 @@ const Register: React.FC = () => {
 
             <div className="text-center text-sm text-slate-500">
               Already have an account?{' '}
-              <span className="text-[#1DBF73] font-semibold cursor-pointer hover:underline">
+              <span onClick={handleLogin} className="text-[#1DBF73] font-semibold cursor-pointer hover:underline">
                 Sign in
               </span>
             </div>
