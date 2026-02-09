@@ -11,6 +11,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
 import MyLoans from "./pages/user/MyLoans";
 import LandingPage from "./pages/landing/LandingPage";
+import Profile from "./pages/user/Profile";
 
 function App() {
   const { user } = useAuth();
@@ -52,6 +53,14 @@ function App() {
           element={
             <ProtectedRoute>
               <MyLoans />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           }
         />
