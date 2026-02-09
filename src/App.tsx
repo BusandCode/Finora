@@ -12,6 +12,8 @@ import { useAuth } from "./context/AuthContext";
 import MyLoans from "./pages/user/MyLoans";
 import LandingPage from "./pages/landing/LandingPage";
 import Profile from "./pages/user/Profile";
+import Repayments from "./pages/user/Repayments";
+import Transactions from "./pages/user/Transactions";
 
 function App() {
   const { user } = useAuth();
@@ -61,6 +63,22 @@ function App() {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/repayments"
+          element={
+            <ProtectedRoute>
+              <Repayments />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/user/transactions"
+          element={
+            <ProtectedRoute>
+              <Transactions />
             </ProtectedRoute>
           }
         />
