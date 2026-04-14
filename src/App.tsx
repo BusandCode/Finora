@@ -12,8 +12,8 @@ import Repayments from "./pages/user/Repayments";
 import Transactions from "./pages/user/Transactions";
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminLoanRequests from "./pages/admin/LoanRequests";
-import AdminUsers from "./pages/admin/Users";
+import AdminLoanRequests from "./pages/admin/AdminLoanRequests";
+import AdminUsers from "./pages/admin/AdminUsers";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminRoute from "./routes/AdminRoute";
