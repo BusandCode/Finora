@@ -6,14 +6,19 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 
 import UserDashboard from "./pages/user/Dashboard";
 import ApplyLoan from "./pages/user/ApplyLoan";
-
-import ProtectedRoute from "./routes/ProtectedRoute";
-import { useAuth } from "./context/AuthContext";
 import MyLoans from "./pages/user/MyLoans";
-import LandingPage from "./pages/landing/LandingPage";
 import Profile from "./pages/user/Profile";
 import Repayments from "./pages/user/Repayments";
 import Transactions from "./pages/user/Transactions";
+
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminLoanRequests from "./pages/admin/LoanRequests";
+import AdminUsers from "./pages/admin/Users";
+
+import ProtectedRoute from "./routes/ProtectedRoute";
+import AdminRoute from "./routes/AdminRoute";
+import { useAuth } from "./context/AuthContext";
+import LandingPage from "./pages/landing/LandingPage";
 
 function App() {
   const { user } = useAuth();
@@ -24,11 +29,11 @@ function App() {
         {/* ================= AUTH ROUTES ================= */}
         <Route
           path="/login"
-          element={user ? <Navigate to="/user/dashboard" /> : <Login />}
+          element={user ? <Navigate to={user.role === "admin" ? "/admin/dashboard" : "/user/dashboard"} /> : <Login />}
         />
         <Route
           path="/register"
-          element={user ? <Navigate to="/user/dashboard" /> : <Register />}
+          element={user ? <Navigate to={user.role === "admin" ? "/admin/dashboard" : "/user/dashboard"} /> : <Register />}
         />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
@@ -80,6 +85,32 @@ function App() {
             <ProtectedRoute>
               <Transactions />
             </ProtectedRoute>
+          }
+        />
+
+        {/* ================= ADMIN ROUTES ================= */}
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/requests"
+          element={
+            <AdminRoute>
+              <AdminLoanRequests />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <AdminRoute>
+              <AdminUsers />
+            </AdminRoute>
           }
         />
 

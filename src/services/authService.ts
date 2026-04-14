@@ -15,6 +15,13 @@ const saveUsers = (users: any[]) => {
 
 export const authService = {
   /**
+   * Get all registered users (for admin UI)
+   */
+  getAllUsers: (): any[] => {
+    return getUsers();
+  },
+
+  /**
    * Register a new user
    */
   register: async (userData: any): Promise<any> => {
@@ -33,7 +40,7 @@ export const authService = {
           name: userData.name,
           email: userData.email,
           password: userData.password, // In a real app, never store plain text passwords!
-          role: "user",
+          role: userData.email.toLowerCase().startsWith("admin") ? "admin" : "user",
         };
 
         users.push(newUser);

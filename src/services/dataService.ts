@@ -5,7 +5,7 @@ export interface Loan {
   tenure: number;
   interest: number;
   purpose: string;
-  status: "Active" | "Completed" | "Pending";
+  status: "Active" | "Completed" | "Pending" | "Rejected";
   startDate: string;
   endDate: string;
 }
@@ -59,14 +59,12 @@ export const dataService = {
     return new Promise((resolve) => {
       setTimeout(() => {
         const loans = getStore<Loan>(LOANS_KEY);
-        const txns = getStore<Transaction>(TXNS_KEY);
-        const repayments = getStore<Repayment>(REPAYMENTS_KEY);
 
         const now = new Date();
         const endDate = new Date();
         endDate.setMonth(endDate.getMonth() + tenure);
 
-        // 1. Create Loan
+        // Create Pending Loan (No Transactions/Repayments Yet)
         const newLoan: Loan = {
           id: `LN-${Math.floor(10000 + Math.random() * 90000)}`,
           userId,
@@ -74,51 +72,86 @@ export const dataService = {
           tenure,
           interest: 12, // Default 12%
           purpose,
-          status: "Active",
+          status: "Pending", // Was "Active"
           startDate: now.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
           endDate: endDate.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
         };
 
-        // 2. Create Disbursement Transaction
+        loans.push(newLoan);
+        saveStore(LOANS_KEY, loans);
+
+        resolve(newLoan);
+      }, 800); // Network simulation
+    });
+  },
+
+  getAllLoans: (): Loan[] => {
+    return getStore<Loan>(LOANS_KEY);
+  },
+
+  approveLoan: async (loanId: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const loans = getStore<Loan>(LOANS_KEY);
+        const loanIndex = loans.findIndex((l) => l.id === loanId);
+
+        if (loanIndex === -1) return reject(new Error("Loan not found"));
+
+        // Set status to Active
+        loans[loanIndex].status = "Active";
+        const approvedLoan = loans[loanIndex];
+        saveStore(LOANS_KEY, loans);
+
+        // Generate Disbursement Transaction
+        const txns = getStore<Transaction>(TXNS_KEY);
+        const now = new Date();
         const newTxn: Transaction = {
           id: Date.now().toString(),
-          userId,
+          userId: approvedLoan.userId,
           reference: `TXN-${Math.floor(100000 + Math.random() * 900000)}`,
           type: "Loan Disbursement",
-          amount,
+          amount: approvedLoan.amount,
           date: now.toISOString().split("T")[0],
           status: "Successful",
         };
+        txns.push(newTxn);
+        saveStore(TXNS_KEY, txns);
 
-        // 3. Create First Repayment entry
+        // Generate Pending Repayment
+        const repayments = getStore<Repayment>(REPAYMENTS_KEY);
         const firstPaymentDate = new Date();
         firstPaymentDate.setMonth(now.getMonth() + 1);
         
-        // Simple mock calculation: Principal + 12% flat interest, divided by tenure
-        const totalToRepay = amount + (amount * 0.12);
-        const monthlyAmount = totalToRepay / tenure;
+        const totalToRepay = approvedLoan.amount + (approvedLoan.amount * 0.12);
+        const monthlyAmount = totalToRepay / approvedLoan.tenure;
         
         const newRepayment: Repayment = {
           id: `RP-${Math.floor(10000 + Math.random() * 90000)}`,
-          userId,
-          loanId: newLoan.id,
+          userId: approvedLoan.userId,
+          loanId: approvedLoan.id,
           amount: Math.round(monthlyAmount),
           dueDate: firstPaymentDate.toISOString().split("T")[0],
           status: "Pending",
         };
-
-        // Save everything
-        loans.push(newLoan);
-        saveStore(LOANS_KEY, loans);
-
-        txns.push(newTxn);
-        saveStore(TXNS_KEY, txns);
-
         repayments.push(newRepayment);
         saveStore(REPAYMENTS_KEY, repayments);
 
-        resolve(newLoan);
-      }, 800); // Network simulation
+        resolve();
+      }, 600);
+    });
+  },
+
+  rejectLoan: async (loanId: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const loans = getStore<Loan>(LOANS_KEY);
+        const loanIndex = loans.findIndex((l) => l.id === loanId);
+        if (loanIndex === -1) return reject(new Error("Loan not found"));
+
+        loans[loanIndex].status = "Rejected"; 
+        saveStore(LOANS_KEY, loans);
+        resolve();
+      }, 400); // Simulate network
     });
   },
 };

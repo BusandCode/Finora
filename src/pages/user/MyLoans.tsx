@@ -18,7 +18,7 @@ const MyLoans: FC = () => {
     <DashboardLayout>
       {/* Header */}
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-[#0A2540]">My Loans 💼</h2>
+        <h2 className="text-3xl font-bold text-[#0A2540]">My Loans </h2>
         <p className="text-[#1F2937] mt-1">
           Track all your loans, status, and details
         </p>
