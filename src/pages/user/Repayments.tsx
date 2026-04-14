@@ -1,39 +1,30 @@
-import { type FC } from "react";
+import { type FC, useState, useEffect } from "react";
 import DashboardLayout from "../../components/layout/DashboardLayout";
-
-interface Repayment {
-  id: string;
-  loanId: string;
-  amount: number;
-  dueDate: string;
-  status: "Paid" | "Pending" | "Overdue";
-}
-
-const repayments: Repayment[] = [
-  {
-    id: "1",
-    loanId: "LN-10234",
-    amount: 25000,
-    dueDate: "2026-02-10",
-    status: "Pending",
-  },
-  {
-    id: "2",
-    loanId: "LN-10012",
-    amount: 15000,
-    dueDate: "2026-01-15",
-    status: "Paid",
-  },
-  {
-    id: "3",
-    loanId: "LN-09901",
-    amount: 20000,
-    dueDate: "2025-12-20",
-    status: "Overdue",
-  },
-];
+import { useAuth } from "../../context/AuthContext";
+import { dataService, type Repayment } from "../../services/dataService";
 
 const Repayments: FC = () => {
+  const { user } = useAuth();
+  const [repayments, setRepayments] = useState<Repayment[]>([]);
+
+  useEffect(() => {
+    if (user) {
+      setRepayments(dataService.getUserRepayments(user.id));
+    }
+  }, [user]);
+
+  const totalPaid = repayments
+    .filter((r) => r.status === "Paid")
+    .reduce((sum, r) => sum + r.amount, 0);
+
+  const pendingAmount = repayments
+    .filter((r) => r.status === "Pending")
+    .reduce((sum, r) => sum + r.amount, 0);
+
+  const overdueAmount = repayments
+    .filter((r) => r.status === "Overdue")
+    .reduce((sum, r) => sum + r.amount, 0);
+
   return (
     <DashboardLayout>
       <div className="max-w-6xl mx-auto space-y-8">
@@ -47,9 +38,9 @@ const Repayments: FC = () => {
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <SummaryCard title="Total Paid" value="₦40,000" />
-          <SummaryCard title="Pending Amount" value="₦25,000" highlight />
-          <SummaryCard title="Overdue" value="₦20,000" danger />
+          <SummaryCard title="Total Paid" value={`₦${totalPaid.toLocaleString()}`} />
+          <SummaryCard title="Pending Amount" value={`₦${pendingAmount.toLocaleString()}`} highlight />
+          <SummaryCard title="Overdue" value={`₦${overdueAmount.toLocaleString()}`} danger />
         </div>
 
         {/* Repayments Table */}
@@ -61,49 +52,55 @@ const Repayments: FC = () => {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-gray-600">
-                <tr>
-                  <th className="px-4 py-3 text-left">Loan ID</th>
-                  <th className="px-4 py-3 text-left">Amount</th>
-                  <th className="px-4 py-3 text-left">Due Date</th>
-                  <th className="px-4 py-3 text-left">Status</th>
-                  <th className="px-4 py-3 text-right">Action</th>
-                </tr>
-              </thead>
-
-              <tbody className="divide-y">
-                {repayments.map((repayment) => (
-                  <tr key={repayment.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 font-medium">
-                      {repayment.loanId}
-                    </td>
-                    <td className="px-4 py-3">
-                      ₦{repayment.amount.toLocaleString()}
-                    </td>
-                    <td className="px-4 py-3">{repayment.dueDate}</td>
-                    <td className="px-4 py-3">
-                      <StatusBadge status={repayment.status} />
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      {repayment.status === "Pending" && (
-                        <button className="px-4 py-2 text-sm rounded-lg bg-[#1DBF73] text-[#0A2540] font-medium hover:opacity-90 transition">
-                          Pay Now
-                        </button>
-                      )}
-                      {repayment.status === "Paid" && (
-                        <span className="text-gray-400 text-xs">Completed</span>
-                      )}
-                      {repayment.status === "Overdue" && (
-                        <button className="px-4 py-2 text-sm rounded-lg bg-red-500/10 text-red-600 font-medium hover:bg-red-500/20 transition">
-                          Pay Overdue
-                        </button>
-                      )}
-                    </td>
+            {repayments.length > 0 ? (
+              <table className="w-full text-sm">
+                <thead className="bg-gray-50 text-gray-600">
+                  <tr>
+                    <th className="px-4 py-3 text-left">Loan ID</th>
+                    <th className="px-4 py-3 text-left">Amount</th>
+                    <th className="px-4 py-3 text-left">Due Date</th>
+                    <th className="px-4 py-3 text-left">Status</th>
+                    <th className="px-4 py-3 text-right">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+
+                <tbody className="divide-y">
+                  {repayments.map((repayment) => (
+                    <tr key={repayment.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 font-medium">
+                        {repayment.loanId}
+                      </td>
+                      <td className="px-4 py-3">
+                        ₦{repayment.amount.toLocaleString()}
+                      </td>
+                      <td className="px-4 py-3">{repayment.dueDate}</td>
+                      <td className="px-4 py-3">
+                        <StatusBadge status={repayment.status} />
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        {repayment.status === "Pending" && (
+                          <button className="px-4 py-2 text-sm rounded-lg bg-[#1DBF73] text-[#0A2540] font-medium hover:opacity-90 transition">
+                            Pay Now
+                          </button>
+                        )}
+                        {repayment.status === "Paid" && (
+                          <span className="text-gray-400 text-xs">Completed</span>
+                        )}
+                        {repayment.status === "Overdue" && (
+                          <button className="px-4 py-2 text-sm rounded-lg bg-red-500/10 text-red-600 font-medium hover:bg-red-500/20 transition">
+                            Pay Overdue
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-gray-500">No repayment schedules available yet.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

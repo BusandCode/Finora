@@ -73,4 +73,24 @@ export const authService = {
       }, 500); // Simulate network latency
     });
   },
+
+  /**
+   * Request password reset
+   */
+  forgotPassword: async (email: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const users = getUsers();
+        const user = users.find((u) => u.email === email);
+
+        if (!user) {
+          reject(new Error("No account found with this email address. Please check and try again."));
+          return;
+        }
+
+        // In a real app, this would send an email. For now, just succeed.
+        resolve();
+      }, 1000); // Simulate network latency
+    });
+  },
 };

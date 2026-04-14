@@ -84,7 +84,6 @@ function App() {
         />
 
         {/* ================= DEFAULT & 404 ================= */}
-        <Route path="/login" element={<Navigate to="/login" replace />} />
         <Route path="/" element={<LandingPage/>} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>

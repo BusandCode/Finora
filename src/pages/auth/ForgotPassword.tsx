@@ -1,9 +1,12 @@
 import React, { useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, CheckCircle2, AlertCircle } from 'lucide-react';
+import { authService } from '../../services/authService';
 
 type FormState = 'input' | 'sending' | 'success' | 'error';
 
 const ForgotPassword: React.FC = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState<string>('');
   const [formState, setFormState] = useState<FormState>('input');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -13,22 +16,21 @@ const ForgotPassword: React.FC = () => {
     setFormState('sending');
     setErrorMessage('');
 
-    // Simulate API call
-    setTimeout(() => {
-      // Simulate random success/error for demo
-      const isSuccess = Math.random() > 0.3;
-      
-      if (isSuccess) {
-        setFormState('success');
-      } else {
-        setFormState('error');
-        setErrorMessage('No account found with this email address. Please check and try again.');
-      }
-    }, 2000);
+    try {
+      await authService.forgotPassword(email);
+      setFormState('success');
+    } catch (err: any) {
+      setFormState('error');
+      setErrorMessage(err.message || 'An error occurred.');
+    }
   };
 
   const handleBackToLogin = () => {
-    window.location.href = '#login'; // Replace with your router navigation
+    navigate('/login');
+  };
+
+  const handleSignUp = () => {
+    navigate('/register');
   };
 
   const handleTryAgain = () => {
@@ -264,12 +266,12 @@ const ForgotPassword: React.FC = () => {
               <div className="mt-6 p-4 bg-finora-light rounded-xl">
                 <p className="text-sm text-slate-600 text-center">
                   Don't have an account?{' '}
-                  <a 
-                    href="#signup"
-                    className="text-finora-emerald font-semibold hover:text-[#17a865] transition-colors duration-200"
+                  <span 
+                    onClick={handleSignUp}
+                    className="text-finora-emerald font-semibold hover:text-[#17a865] transition-colors duration-200 cursor-pointer"
                   >
                     Sign up for free
-                  </a>
+                  </span>
                 </p>
               </div>
             </>

@@ -1,50 +1,19 @@
-import { type FC } from "react";
+import { type FC, useState, useEffect } from "react";
 import DashboardLayout from "../../components/layout/DashboardLayout";
-
-/* ---------- Interfaces ---------- */
-interface LoanProps {
-  id: string;
-  amount: string;
-  tenure: string;
-  interest: string;
-  status: "Active" | "Completed" | "Pending";
-  startDate: string;
-  endDate: string;
-}
-
-/* ---------- Sample Data ---------- */
-const sampleLoans: LoanProps[] = [
-  {
-    id: "LN001",
-    amount: "₦750,000",
-    tenure: "12 months",
-    interest: "12%",
-    status: "Active",
-    startDate: "Feb 1, 2026",
-    endDate: "Feb 1, 2027",
-  },
-  {
-    id: "LN002",
-    amount: "₦500,000",
-    tenure: "6 months",
-    interest: "10%",
-    status: "Completed",
-    startDate: "Jan 1, 2025",
-    endDate: "Jul 1, 2025",
-  },
-  {
-    id: "LN003",
-    amount: "₦300,000",
-    tenure: "3 months",
-    interest: "8%",
-    status: "Pending",
-    startDate: "Mar 1, 2026",
-    endDate: "Jun 1, 2026",
-  },
-];
+import { useAuth } from "../../context/AuthContext";
+import { dataService, type Loan } from "../../services/dataService";
 
 /* ---------- Main Component ---------- */
 const MyLoans: FC = () => {
+  const { user } = useAuth();
+  const [loans, setLoans] = useState<Loan[]>([]);
+
+  useEffect(() => {
+    if (user) {
+      setLoans(dataService.getUserLoans(user.id));
+    }
+  }, [user]);
+
   return (
     <DashboardLayout>
       {/* Header */}
@@ -56,19 +25,28 @@ const MyLoans: FC = () => {
       </div>
 
       {/* Loan Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sampleLoans.map((loan) => (
-          <LoanCard key={loan.id} {...loan} />
-        ))}
-      </div>
+      {loans.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {loans.map((loan) => (
+            <LoanCard key={loan.id} {...loan} />
+          ))}
+        </div>
+      ) : (
+        <div className="bg-white rounded-2xl shadow p-12 text-center flex flex-col items-center">
+          <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+            <span className="text-2xl">📋</span>
+          </div>
+          <h3 className="text-lg font-semibold text-[#0A2540] mb-2">No loans found</h3>
+          <p className="text-gray-500 max-w-sm">You haven't applied for any loans yet. Navigate to "Apply Loan" to get started.</p>
+        </div>
+      )}
     </DashboardLayout>
   );
 };
 
 /* ---------- Components ---------- */
-interface LoanCardProps extends LoanProps {}
 
-const LoanCard: FC<LoanCardProps> = ({
+const LoanCard: FC<Loan> = ({
   amount,
   tenure,
   interest,
@@ -85,9 +63,9 @@ const LoanCard: FC<LoanCardProps> = ({
   return (
     <div className="bg-white rounded-2xl shadow p-6 flex flex-col justify-between">
       <div className="mb-4">
-        <h4 className="text-lg font-semibold text-[#0A2540]">{amount}</h4>
-        <p className="text-gray-500 text-sm">Tenure: {tenure}</p>
-        <p className="text-gray-500 text-sm">Interest: {interest}</p>
+        <h4 className="text-lg font-semibold text-[#0A2540]">₦{amount.toLocaleString()}</h4>
+        <p className="text-gray-500 text-sm">Tenure: {tenure} months</p>
+        <p className="text-gray-500 text-sm">Interest: {interest}%</p>
       </div>
 
       <div className="flex justify-between items-center">
