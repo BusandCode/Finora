@@ -2,6 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, ArrowRight, Sparkles, ShieldCheck, Clock, TrendingUp } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { useState } from "react";
+import { authService } from "../../services/authService";
 
 interface FeatureProps {
   icon: React.ReactNode;
@@ -25,6 +27,12 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleForgotPassword = () => {
     navigate("/forgot-password");
   };
@@ -34,21 +42,25 @@ const Login: React.FC = () => {
   };
 
   const handleLogin = async () => {
-    // 🔴 Replace this with real API call later
-    const response = {
-      user: {
-        id: "1",
-        email: "user@finora.com",
-        role: "user" as const,
-      },
-      token: "mock-jwt-token",
-    };
+    if (!email || !password) {
+      setError("Please fill in all fields.");
+      return;
+    }
 
-    // Save auth globally
-    login(response);
+    setError("");
+    setLoading(true);
 
-    // Redirect to dashboard
-    navigate("/user/dashboard");
+    try {
+      const response = await authService.login(email, password);
+      // Save auth globally
+      login(response);
+      // Redirect to dashboard
+      navigate("/user/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Failed to login");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -115,19 +127,33 @@ const Login: React.FC = () => {
             </div>
 
             <form className="space-y-5">
+              {error && (
+                <div className="p-3 text-sm text-red-600 bg-red-50 rounded-xl border border-red-100">
+                  {error}
+                </div>
+              )}
+
               <input
                 type="email"
                 placeholder="you@example.com"
-                className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl focus:border-[#1DBF73] outline-none"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl focus:border-[#1DBF73] border-2 border-transparent focus:bg-white outline-none transition"
               />
 
               <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
-                  className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl focus:border-[#1DBF73] outline-none"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl focus:border-[#1DBF73] border-2 border-transparent focus:bg-white outline-none transition"
                 />
-                <Eye size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                <Eye 
+                  size={18} 
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer hover:text-[#1DBF73] transition-colors" 
+                  onClick={() => setShowPassword(!showPassword)}
+                />
               </div>
 
               <div className="flex justify-between text-sm">
@@ -142,10 +168,11 @@ const Login: React.FC = () => {
               <button
                 type="button"
                 onClick={handleLogin}
-                className="w-full py-3.5 text-white font-semibold rounded-xl bg-linear-to-br from-[#1DBF73] to-[#17a865] flex items-center justify-center gap-2"
+                disabled={loading}
+                className="w-full py-3.5 text-white font-semibold rounded-xl bg-linear-to-br from-[#1DBF73] to-[#17a865] flex items-center justify-center gap-2 hover:-translate-y-0.5 transition shadow disabled:opacity-70 disabled:hover:translate-y-0"
               >
-                Sign In
-                <ArrowRight size={18} />
+                {loading ? "Signing In..." : "Sign In"}
+                {!loading && <ArrowRight size={18} />}
               </button>
             </form>
 

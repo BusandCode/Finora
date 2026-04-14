@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { authService } from '../../services/authService';
 import {
   Eye,
   ArrowRight,
@@ -28,9 +30,48 @@ const Feature: React.FC<FeatureProps> = ({ icon, title, children }) => {
 };
 
 const Register: React.FC = () => {
-  const navigate = useNavigate()
-  const handleLogin = () => {
-    navigate('/login'); // Redirect to login page after sign in
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleLoginRedirect = () => {
+    navigate('/login'); 
+  }
+
+  const handleRegister = async () => {
+    if (!name || !email || !password || !confirmPassword) {
+      setError('Please fill in all fields.');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await authService.register({ name, email, password });
+      
+      // Automatically log in the user after true
+      login(response);
+      
+      // Redirect to dashboard
+      navigate('/user/dashboard');
+    } catch (err: any) {
+      setError(err.message || 'Failed to register');
+    } finally {
+      setLoading(false);
+    }
   }
   return (
     <div className="min-h-screen bg-[#F5F7FA] relative overflow-hidden font-['Outfit',sans-serif]">
@@ -99,6 +140,12 @@ const Register: React.FC = () => {
             </div>
 
             <form className="space-y-5">
+              {error && (
+                <div className="p-3 text-sm text-red-600 bg-red-50 rounded-xl border border-red-100">
+                  {error}
+                </div>
+              )}
+
               <div>
                 <label className="block text-sm font-medium text-[#1F2937] mb-1">
                   Full Name
@@ -106,6 +153,8 @@ const Register: React.FC = () => {
                 <input
                   type="text"
                   placeholder="John Doe"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl border-2 border-transparent focus:border-[#1DBF73] focus:bg-white outline-none transition"
                 />
               </div>
@@ -117,6 +166,8 @@ const Register: React.FC = () => {
                 <input
                   type="email"
                   placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl border-2 border-transparent focus:border-[#1DBF73] focus:bg-white outline-none transition"
                 />
               </div>
@@ -127,11 +178,16 @@ const Register: React.FC = () => {
                 </label>
                 <div className="relative">
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder="Create a password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl border-2 border-transparent focus:border-[#1DBF73] focus:bg-white outline-none transition"
                   />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
+                  <span 
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer hover:text-[#1DBF73] transition-colors"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
                     <Eye size={18} />
                   </span>
                 </div>
@@ -141,19 +197,31 @@ const Register: React.FC = () => {
                 <label className="block text-sm font-medium text-[#1F2937] mb-1">
                   Confirm Password
                 </label>
-                <input
-                  type="password"
-                  placeholder="Confirm password"
-                  className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl border-2 border-transparent focus:border-[#1DBF73] focus:bg-white outline-none transition"
-                />
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl border-2 border-transparent focus:border-[#1DBF73] focus:bg-white outline-none transition"
+                  />
+                  <span 
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer hover:text-[#1DBF73] transition-colors"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    <Eye size={18} />
+                  </span>
+                </div>
               </div>
 
               <button
                 type="button"
-                className="w-full py-3.5 text-white font-semibold rounded-xl bg-linear-to-br from-[#1DBF73] to-[#17a865] hover:-translate-y-0.5 transition flex items-center justify-center gap-2 shadow"
+                onClick={handleRegister}
+                disabled={loading}
+                className="w-full py-3.5 text-white font-semibold rounded-xl bg-linear-to-br from-[#1DBF73] to-[#17a865] hover:-translate-y-0.5 transition flex items-center justify-center gap-2 shadow disabled:opacity-70 disabled:hover:translate-y-0"
               >
-                Create Account
-                <ArrowRight size={18} />
+                {loading ? "Creating Account..." : "Create Account"}
+                {!loading && <ArrowRight size={18} />}
               </button>
             </form>
 
@@ -181,7 +249,7 @@ const Register: React.FC = () => {
 
             <div className="text-center text-sm text-slate-500">
               Already have an account?{' '}
-              <span onClick={handleLogin} className="text-[#1DBF73] font-semibold cursor-pointer hover:underline">
+              <span onClick={handleLoginRedirect} className="text-[#1DBF73] font-semibold cursor-pointer hover:underline">
                 Sign in
               </span>
             </div>
