@@ -30,7 +30,7 @@ const Repayments: FC = () => {
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold text-[#0A2540]">Repayments</h1>
+          <h1 className="text-2xl font-bold text-[#001a33]">Repayments</h1>
           <p className="text-gray-500 text-sm">
             Track and manage your loan repayments
           </p>
@@ -46,7 +46,7 @@ const Repayments: FC = () => {
         {/* Repayments Table */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="px-4 py-4 border-b">
-            <h2 className="font-semibold text-[#0A2540]">
+            <h2 className="font-semibold text-[#001a33]">
               Repayment Schedule
             </h2>
           </div>
@@ -79,7 +79,7 @@ const Repayments: FC = () => {
                       </td>
                       <td className="px-4 py-3 text-right">
                         {repayment.status === "Pending" && (
-                          <button className="px-4 py-2 text-sm rounded-lg bg-[#1DBF73] text-[#0A2540] font-medium hover:opacity-90 transition">
+                          <button className="px-4 py-2 text-sm rounded-lg bg-[#001a33] text-white font-medium hover:opacity-90 transition">
                             Pay Now
                           </button>
                         )}
@@ -119,7 +119,7 @@ const SummaryCard: FC<{
   <div
     className={`rounded-xl p-5 border shadow-sm bg-white ${
       highlight
-        ? "border-[#1DBF73]/30"
+        ? "border-[#001a33]/30"
         : danger
         ? "border-red-500/30"
         : "border-gray-100"
@@ -129,10 +129,10 @@ const SummaryCard: FC<{
     <h3
       className={`text-xl font-bold mt-1 ${
         highlight
-          ? "text-[#1DBF73]"
+          ? "text-[#001a33]"
           : danger
           ? "text-red-600"
-          : "text-[#0A2540]"
+          : "text-[#001a33]"
       }`}
     >
       {value}
@@ -145,7 +145,7 @@ const StatusBadge: FC<{ status: Repayment["status"] }> = ({ status }) => {
 
   if (status === "Paid")
     return (
-      <span className={`${base} bg-[#1DBF73]/20 text-[#1DBF73]`}>
+      <span className={`${base} bg-[#001a33]/20 text-[#001a33]`}>
         Paid
       </span>
     );

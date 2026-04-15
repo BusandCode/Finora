@@ -50,13 +50,13 @@ const AdminLoanRequests: FC = () => {
     <AdminLayout>
       <div className="max-w-6xl mx-auto space-y-8">
         <div>
-          <h1 className="text-2xl font-bold text-[#0A2540]">Loan Application Queue</h1>
+          <h1 className="text-2xl font-bold text-[#001a33]">Loan Application Queue</h1>
           <p className="text-gray-500 text-sm">Review, approve, or reject incoming user requests</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="px-4 py-4 border-b flex justify-between items-center">
-            <h2 className="font-semibold text-[#0A2540]">Pending Requests ({loans.length})</h2>
+            <h2 className="font-semibold text-[#001a33]">Pending Requests ({loans.length})</h2>
           </div>
 
           <div className="overflow-x-auto">
@@ -76,15 +76,15 @@ const AdminLoanRequests: FC = () => {
                   {loans.map((loan) => (
                     <tr key={loan.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 text-gray-500">{loan.startDate}</td>
-                      <td className="px-4 py-3 font-semibold text-[#0A2540]">{getUserName(loan.userId)}</td>
+                      <td className="px-4 py-3 font-semibold text-[#001a33]">{getUserName(loan.userId)}</td>
                       <td className="px-4 py-3">{loan.purpose || "General"}</td>
-                      <td className="px-4 py-3 font-bold text-[#1DBF73]">₦{loan.amount.toLocaleString()}</td>
+                      <td className="px-4 py-3 font-bold text-[#001a33]">₦{loan.amount.toLocaleString()}</td>
                       <td className="px-4 py-3">{loan.tenure} mos</td>
                       <td className="px-4 py-3 flex gap-2 justify-center">
                         <button
                           onClick={() => handleApprove(loan.id)}
                           disabled={processing === loan.id}
-                          className="px-3 py-1.5 flex-1 bg-[#1DBF73] text-white rounded font-medium hover:bg-[#18a864] transition disabled:opacity-50"
+                          className="px-3 py-1.5 flex-1 bg-[#001a33] text-white rounded font-medium hover:bg-[#0d1f34] transition disabled:opacity-50"
                         >
                           Approve
                         </button>

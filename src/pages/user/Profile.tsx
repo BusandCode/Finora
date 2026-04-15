@@ -10,8 +10,8 @@ interface ProfileFormData {
 
 const Profile: FC = () => {
   const [formData, setFormData] = useState<ProfileFormData>({
-    fullName: "John Doe",
-    email: "johndoe@email.com",
+    fullName: "Andrew Adetokunbo",
+    email: "andrew@email.com",
     phone: "+234 801 234 5678",
     address: "Lagos, Nigeria",
   });
@@ -30,7 +30,7 @@ const Profile: FC = () => {
       <div className="max-w-5xl mx-auto px-2 sm:px-4 space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold text-[#0A2540]">Profile</h1>
+          <h1 className="text-2xl font-bold text-[#001a33]">Profile</h1>
           <p className="text-gray-500 text-sm">
             Manage your personal information
           </p>
@@ -40,11 +40,11 @@ const Profile: FC = () => {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6">
           {/* Avatar */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
-            <div className="w-16 h-16 rounded-full bg-[#1DBF73]/20 flex items-center justify-center text-[#1DBF73] font-bold text-xl">
+            <div className="w-16 h-16 rounded-full bg-[#001a33]/20 flex items-center justify-center text-[#001a33] font-bold text-xl">
               JD
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-[#0A2540]">
+              <h2 className="text-lg font-semibold text-[#001a33]">
                 {formData.fullName}
               </h2>
               <p className="text-sm text-gray-500">{formData.email}</p>
@@ -65,7 +65,7 @@ const Profile: FC = () => {
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1DBF73]/40"
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#001a33]/40"
               />
             </div>
 
@@ -91,7 +91,7 @@ const Profile: FC = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1DBF73]/40"
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#001a33]/40"
               />
             </div>
 
@@ -112,7 +112,7 @@ const Profile: FC = () => {
             <div className="md:col-span-2 flex justify-end">
               <button
                 type="submit"
-                className="w-full sm:w-auto px-6 py-3 rounded-lg bg-[#1DBF73] text-[#0A2540] font-semibold hover:opacity-90 transition"
+                className="w-full sm:w-auto px-6 py-3 rounded-lg bg-[#001a33] text-white font-semibold hover:opacity-90 transition"
               >
                 Save Changes
               </button>

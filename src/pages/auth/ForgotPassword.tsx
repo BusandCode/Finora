@@ -110,7 +110,7 @@ const ForgotPassword: React.FC = () => {
                 <button
                   type="submit"
                   disabled={formState === 'sending'}
-                  className="w-full px-4 py-4 text-base font-semibold text-white bg-linear-to-br from-finora-emerald to-[#17a865] border-none rounded-xl cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_4px_12px_rgba(29,191,115,0.2)] hover:shadow-[0_8px_20px_rgba(29,191,115,0.3)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                  className="w-full px-4 py-4 text-base font-semibold text-white bg-linear-to-br from-[#001a33] to-[#0d1f34] border-none rounded-xl cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_4px_12px_rgba(0,26,51,0.2)] hover:shadow-[0_8px_20px_rgba(0,26,51,0.3)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 >
                   {formState === 'sending' ? (
                     <>
@@ -132,7 +132,7 @@ const ForgotPassword: React.FC = () => {
                   Remember your password?{' '}
                   <button 
                     onClick={handleBackToLogin}
-                    className="text-finora-emerald font-semibold hover:text-[#17a865] transition-colors duration-200"
+                    className="text-[#001a33] font-semibold hover:text-[#0d1f34] transition-colors duration-200"
                   >
                     Sign in instead
                   </button>
@@ -249,14 +249,14 @@ const ForgotPassword: React.FC = () => {
               <div className="space-y-3">
                 <button
                   onClick={handleTryAgain}
-                  className="w-full px-4 py-4 text-base font-semibold text-white bg-linear-to-br from-finora-emerald to-[#17a865] border-none rounded-xl cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_4px_12px_rgba(29,191,115,0.2)] hover:shadow-[0_8px_20px_rgba(29,191,115,0.3)] hover:-translate-y-0.5"
+                  className="w-full px-4 py-4 text-base font-semibold text-white bg-linear-to-br from-[#001a33] to-[#0d1f34] border-none rounded-xl cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_4px_12px_rgba(0,26,51,0.2)] hover:shadow-[0_8px_20px_rgba(0,26,51,0.3)] hover:-translate-y-0.5"
                 >
                   Try Another Email
                 </button>
                 
                 <button
                   onClick={handleBackToLogin}
-                  className="w-full px-4 py-4 text-base font-semibold text-finora-navy bg-finora-light border-2 border-finora-light rounded-xl transition-all duration-300 hover:border-finora-emerald hover:bg-white hover:shadow-md"
+                  className="w-full px-4 py-4 text-base font-semibold text-finora-navy bg-finora-light border-2 border-finora-light rounded-xl transition-all duration-300 hover:border-[#001a33] hover:bg-white hover:shadow-md"
                 >
                   Back to Login
                 </button>
@@ -268,7 +268,7 @@ const ForgotPassword: React.FC = () => {
                   Don't have an account?{' '}
                   <span 
                     onClick={handleSignUp}
-                    className="text-finora-emerald font-semibold hover:text-[#17a865] transition-colors duration-200 cursor-pointer"
+                    className="text-[#001a33] font-semibold hover:text-[#0d1f34] transition-colors duration-200 cursor-pointer"
                   >
                     Sign up for free
                   </span>

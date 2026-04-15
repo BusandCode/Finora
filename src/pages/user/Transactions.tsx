@@ -30,7 +30,7 @@ const Transactions: FC = () => {
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold text-[#0A2540]">
+          <h1 className="text-2xl font-bold text-[#001a33]">
             Transactions
           </h1>
           <p className="text-gray-500 text-sm">
@@ -48,7 +48,7 @@ const Transactions: FC = () => {
         {/* Transactions Table */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="px-4 py-4 border-b">
-            <h2 className="font-semibold text-[#0A2540]">
+            <h2 className="font-semibold text-[#001a33]">
               Transaction History
             </h2>
           </div>
@@ -107,7 +107,7 @@ const SummaryCard: FC<{
   <div
     className={`rounded-xl p-5 border shadow-sm bg-white ${
       highlight
-        ? "border-[#1DBF73]/30"
+        ? "border-[#001a33]/30"
         : danger
         ? "border-red-500/30"
         : "border-gray-100"
@@ -117,10 +117,10 @@ const SummaryCard: FC<{
     <h3
       className={`text-xl font-bold mt-1 ${
         highlight
-          ? "text-[#1DBF73]"
+          ? "text-[#001a33]"
           : danger
           ? "text-red-600"
-          : "text-[#0A2540]"
+          : "text-[#001a33]"
       }`}
     >
       {value}
@@ -133,7 +133,7 @@ const StatusBadge: FC<{ status: Transaction["status"] }> = ({ status }) => {
 
   if (status === "Successful")
     return (
-      <span className={`${base} bg-[#1DBF73]/20 text-[#1DBF73]`}>
+      <span className={`${base} bg-[#001a33]/20 text-[#001a33]`}>
         Successful
       </span>
     );

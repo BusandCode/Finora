@@ -18,7 +18,7 @@ const MyLoans: FC = () => {
     <DashboardLayout>
       {/* Header */}
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-[#0A2540]">My Loans </h2>
+        <h2 className="text-3xl font-bold text-[#001a33]">My Loans </h2>
         <p className="text-[#1F2937] mt-1">
           Track all your loans, status, and details
         </p>
@@ -36,7 +36,7 @@ const MyLoans: FC = () => {
           <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4">
             <span className="text-2xl">📋</span>
           </div>
-          <h3 className="text-lg font-semibold text-[#0A2540] mb-2">No loans found</h3>
+          <h3 className="text-lg font-semibold text-[#001a33] mb-2">No loans found</h3>
           <p className="text-gray-500 max-w-sm">You haven't applied for any loans yet. Navigate to "Apply Loan" to get started.</p>
         </div>
       )}
@@ -55,7 +55,7 @@ const LoanCard: FC<Loan> = ({
   endDate,
 }) => {
   const statusColors: Record<string, string> = {
-    Active: "bg-[#1DBF73]/20 text-[#1DBF73]",
+    Active: "bg-[#001a33]/20 text-[#001a33]",
     Completed: "bg-blue-100 text-blue-600",
     Pending: "bg-yellow-100 text-yellow-600",
   };
@@ -63,7 +63,7 @@ const LoanCard: FC<Loan> = ({
   return (
     <div className="bg-white rounded-2xl shadow p-6 flex flex-col justify-between">
       <div className="mb-4">
-        <h4 className="text-lg font-semibold text-[#0A2540]">₦{amount.toLocaleString()}</h4>
+        <h4 className="text-lg font-semibold text-[#001a33]">₦{amount.toLocaleString()}</h4>
         <p className="text-gray-500 text-sm">Tenure: {tenure} months</p>
         <p className="text-gray-500 text-sm">Interest: {interest}%</p>
       </div>

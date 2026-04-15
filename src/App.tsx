@@ -20,6 +20,8 @@ import AdminRoute from "./routes/AdminRoute";
 import { useAuth } from "./context/AuthContext";
 import LandingPage from "./pages/landing/LandingPage";
 
+import NotFound from "./pages/NotFound";
+
 function App() {
   const { user } = useAuth();
 
@@ -116,7 +118,7 @@ function App() {
 
         {/* ================= DEFAULT & 404 ================= */}
         <Route path="/" element={<LandingPage/>} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

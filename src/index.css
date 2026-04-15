@@ -3,11 +3,11 @@
 /* Custom CSS variables for Tailwind v4 */
 @theme {
   /* Custom Colors */
-  --color-finora-navy: #0a2540;
-  --color-finora-emerald: #1dbf73;
-  --color-finora-light: #f5f7fa;
-  --color-finora-dark: #1f2937;
-  --color-finora-accent: #3b82f6;
+  --color-finora-navy: #001a33;
+  --color-finora-emerald: #ffffff;
+  --color-finora-light: #f0f4fa;
+  --color-finora-dark: #001a33;
+  --color-finora-accent: #001a33;
 
   /* Font Families */
   --font-outfit: 'Outfit', ui-sans-serif, system-ui, sans-serif;
@@ -61,11 +61,11 @@
 @keyframes pulse-soft {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 8px 24px rgba(29, 191, 115, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 26, 51, 0.3);
   }
   50% {
     transform: scale(1.05);
-    box-shadow: 0 12px 32px rgba(29, 191, 115, 0.4);
+    box-shadow: 0 12px 32px rgba(0, 26, 51, 0.4);
   }
 }
 

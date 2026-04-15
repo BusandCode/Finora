@@ -33,9 +33,9 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
   ];
 
   return (
-    <div className="flex min-h-screen bg-[#F5F7FA]">
+    <div className="flex min-h-screen bg-[#f0f4fa]">
       {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#0A2540] flex items-center justify-between px-4 py-4">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#001a33] flex items-center justify-between px-4 py-4">
         <h1 className="text-lg font-bold text-white">Finora</h1>
         <button onClick={() => setOpen(true)} className="text-white" aria-label="Open menu">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -49,7 +49,7 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
 
       {/* Mobile Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-[#0A2540] text-white z-50 transform transition-transform duration-300 lg:hidden
+        className={`fixed top-0 left-0 h-full w-64 bg-[#001a33] text-white z-50 transform transition-transform duration-300 lg:hidden
           ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="p-6 flex flex-col h-full justify-between">
@@ -79,7 +79,7 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
       </aside>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex fixed top-0 left-0 h-full w-64 bg-[#0A2540] text-white flex-col justify-between z-30">
+      <aside className="hidden lg:flex fixed top-0 left-0 h-full w-64 bg-[#001a33] text-white flex-col justify-between z-30">
         <div className="p-6">
           <h1 className="text-2xl font-bold mb-10 tracking-tight">Finora</h1>
           <nav className="space-y-2">
@@ -120,7 +120,7 @@ const NavItem: FC<NavItemProps> = ({ label, active, onClick }) => (
   <button
     onClick={onClick}
     className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition
-      ${active ? "bg-[#1DBF73] text-[#0A2540]" : "hover:bg-[#081f35] text-white"}`}
+      ${active ? "bg-[#ffffff] text-[#001a33]" : "hover:bg-[#0d1f34] text-white"}`}
   >
     {label}
   </button>

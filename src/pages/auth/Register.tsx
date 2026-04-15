@@ -2,274 +2,417 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/authService';
-import {
-  Eye,
-  ArrowRight,
-  Sparkles,
-  ShieldCheck,
-  TrendingUp,
-  Users,
-} from 'lucide-react';
+import { Eye, EyeOff, ArrowRight, Check, Zap, Shield, Users, Loader2 } from 'lucide-react';
 
-interface FeatureProps {
-  icon: React.ReactNode;
-  title: string;
-  children: React.ReactNode;
-}
-
-const Feature: React.FC<FeatureProps> = ({ icon, title, children }) => {
+/* ─────────────────── Password Strength ─────────────────── */
+const PasswordStrengthBar: React.FC<{ password: string }> = ({ password }) => {
+  const getScore = (pw: string): number => {
+    let s = 0;
+    if (pw.length >= 8) s++;
+    if (/[A-Z]/.test(pw)) s++;
+    if (/[0-9]/.test(pw)) s++;
+    if (/[^A-Za-z0-9]/.test(pw)) s++;
+    return s;
+  };
+  const score = getScore(password);
+  const meta = [
+    { label: 'Weak',   color: '#ef4444' },
+    { label: 'Fair',   color: '#f59e0b' },
+    { label: 'Good',   color: '#22c55e' },
+    { label: 'Strong', color: '#10b981' },
+  ];
+  if (!password) return null;
   return (
-    <div className="flex items-start gap-4">
-      <div className="mt-1 text-[#1DBF73]">{icon}</div>
-      <div>
-        <h3 className="font-semibold text-lg">{title}</h3>
-        <p className="text-slate-500 mt-1">{children}</p>
+    <div style={{ marginTop: 8 }}>
+      <div style={{ display: 'flex', gap: 4 }}>
+        {[0, 1, 2, 3].map((i) => (
+          <div
+            key={i}
+            style={{
+              height: 2,
+              flex: 1,
+              borderRadius: 99,
+              background: i < score ? meta[score - 1].color : 'rgba(255,255,255,0.08)',
+              transition: 'background 0.3s',
+            }}
+          />
+        ))}
       </div>
+      <p style={{ fontSize: 11, marginTop: 5, color: meta[score - 1].color, fontFamily: "'DM Mono', monospace", letterSpacing: '0.04em' }}>
+        {meta[score - 1].label}
+      </p>
     </div>
   );
 };
 
+/* ─────────────────── Input ─────────────────── */
+const Field: React.FC<{
+  label: string;
+  type?: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  suffix?: React.ReactNode;
+}> = ({ label, type = 'text', value, onChange, placeholder, suffix }) => (
+  <div>
+    <label style={{ display: 'block', fontSize: 10, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 7, fontFamily: "'DM Mono', monospace" }}>
+      {label}
+    </label>
+    <div style={{ position: 'relative' }}>
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        style={{
+          width: '100%',
+          padding: '11px 14px',
+          paddingRight: suffix ? 42 : 14,
+          fontSize: 14,
+          background: 'rgba(255,255,255,0.04)',
+          border: '1px solid rgba(255,255,255,0.10)',
+          borderRadius: 8,
+          color: '#f1f5f9',
+          outline: 'none',
+          fontFamily: "'DM Sans', sans-serif",
+          boxSizing: 'border-box',
+          transition: 'border-color 0.2s, background 0.2s',
+        }}
+        onFocus={(e) => { e.target.style.borderColor = 'rgba(16,185,129,0.6)'; e.target.style.background = 'rgba(16,185,129,0.04)'; }}
+        onBlur={(e) => { e.target.style.borderColor = 'rgba(255,255,255,0.10)'; e.target.style.background = 'rgba(255,255,255,0.04)'; }}
+      />
+      {suffix && (
+        <div style={{ position: 'absolute', right: 13, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.3)', display: 'flex', cursor: 'pointer' }}>
+          {suffix}
+        </div>
+      )}
+    </div>
+  </div>
+);
+
+/* ─────────────────── Sidebar features ─────────────────── */
+const features = [
+  { icon: <Zap size={14} />, title: 'Instant decisions', desc: 'Apply and get approved in under 60 seconds.' },
+  { icon: <Shield size={14} />, title: 'Bank-grade security', desc: '256-bit encryption. Your data never leaves our servers.' },
+  { icon: <Users size={14} />, title: '150 000+ members', desc: 'Join a community of financially empowered users.' },
+];
+
+/* ─────────────────── Page ─────────────────── */
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const handleLoginRedirect = () => {
-    navigate('/login'); 
-  }
+  const [firstName, setFirstName]         = useState('');
+  const [lastName,  setLastName]          = useState('');
+  const [email,     setEmail]             = useState('');
+  const [password,  setPassword]          = useState('');
+  const [confirm,   setConfirm]           = useState('');
+  const [terms,     setTerms]             = useState(false);
+  const [error,     setError]             = useState('');
+  const [loading,   setLoading]           = useState(false);
+  const [success,   setSuccess]           = useState(false);
+  const [showPw,    setShowPw]            = useState(false);
+  const [showCpw,   setShowCpw]           = useState(false);
 
   const handleRegister = async () => {
-    if (!name || !email || !password || !confirmPassword) {
-      setError('Please fill in all fields.');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
-      return;
-    }
-
-    setError('');
-    setLoading(true);
-
+    if (!firstName || !lastName || !email || !password || !confirm) { setError('Please fill in all fields.'); return; }
+    if (password !== confirm)  { setError('Passwords do not match.'); return; }
+    if (!terms)                { setError('Please accept the terms to continue.'); return; }
+    setError(''); setLoading(true);
     try {
-      const response = await authService.register({ name, email, password });
-      
-      // Automatically log in the user after true
-      login(response);
-      
-      // Redirect to dashboard
-      navigate('/user/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Failed to register');
-    } finally {
-      setLoading(false);
-    }
-  }
+      const res = await authService.register({ name: `${firstName} ${lastName}`, email, password });
+      login(res); setSuccess(true);
+      setTimeout(() => navigate('/user/dashboard'), 900);
+    } catch (e: any) { setError(e.message || 'Registration failed.'); }
+    finally { setLoading(false); }
+  };
+
+  /* ─── Shared styles ─── */
+  const pageStyle: React.CSSProperties = {
+    minHeight: '100vh',
+    display: 'flex',
+    background: '#080c14',
+    fontFamily: "'DM Sans', sans-serif",
+  };
+
+  /* subtle dot-grid overlay */
+  const dotGrid: React.CSSProperties = {
+    position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
+    backgroundImage: 'radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)',
+    backgroundSize: '28px 28px',
+  };
+
+  /* accent glow */
+  const glow: React.CSSProperties = {
+    position: 'fixed', top: -200, left: '30%', width: 600, height: 600,
+    borderRadius: '50%', pointerEvents: 'none', zIndex: 0,
+    background: 'radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%)',
+  };
+
   return (
-    <div className="min-h-screen bg-[#F5F7FA] relative overflow-hidden font-['Outfit',sans-serif]">
+    <div style={pageStyle}>
+      <div style={dotGrid} />
+      <div style={glow} />
 
-      {/* Floating Background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute w-130 h-130 rounded-full blur-[90px] opacity-15 bg-linear-to-br from-[#0A2540] to-[#1DBF73] -top-40 -left-40 animate-float"></div>
-        <div className="absolute w-105 h-105 rounded-full blur-[90px] opacity-15 bg-linear-to-br from-[#3B82F6] to-[#1DBF73] bottom-0 right-0 animate-float-delayed"></div>
-      </div>
-
-      <div className="relative z-10 flex min-h-screen">
-
-        {/* Sidebar */}
-        <aside className="hidden lg:flex flex-col justify-between w-1/2 bg-linear-to-br from-[#0A2540] to-[#0d3556] px-16 py-14 text-white">
-
-          {/* Top */}
-          <div>
-            <div className="flex items-center gap-4 mb-14">
-              <div className="w-14 h-14 rounded-2xl bg-linear-to-br from-[#1DBF73] to-[#17a865] flex items-center justify-center shadow-lg animate-pulse-soft">
-                <Sparkles size={28} />
-              </div>
-              <h1 className="font-['DM_Serif_Display',serif] text-5xl tracking-tight">
-                Finora
-              </h1>
+      {/* ── Sidebar ── */}
+      <aside style={{
+        display: 'none',
+        position: 'relative', zIndex: 1,
+        width: '42%', minWidth: 360,
+        borderRight: '1px solid rgba(255,255,255,0.06)',
+        padding: '48px 44px',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        // show on large screens via inline style override below
+      }}
+        className="sidebar-panel"
+      >
+        {/* Wordmark */}
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 52 }}>
+            <div style={{
+              width: 32, height: 32, borderRadius: 8,
+              background: 'linear-gradient(135deg, #10b981, #0d9488)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Zap size={15} color="#fff" />
             </div>
+            <span style={{ fontSize: 18, fontWeight: 600, color: '#f1f5f9', letterSpacing: '-0.02em' }}>Finora</span>
+          </div>
 
-            <h2 className="text-4xl font-semibold leading-tight mb-4">
-              Start Your Financial<br />Journey Today
-            </h2>
-            <p className="text-white/70 max-w-md mb-12">
-              Create your Finora account and gain access to fast loans,
-              flexible repayments, and transparent pricing.
+          <p style={{ fontSize: 28, fontWeight: 700, color: '#f1f5f9', lineHeight: 1.25, marginBottom: 12, letterSpacing: '-0.03em' }}>
+            The smarter way<br />to manage money
+          </p>
+          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 40, maxWidth: 280 }}>
+            Fast loans, flexible repayments, and crystal-clear pricing — all in one place.
+          </p>
+
+          {/* Features */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: 44 }}>
+            {features.map((f) => (
+              <div key={f.title} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                <div style={{
+                  width: 30, height: 30, minWidth: 30, borderRadius: 7,
+                  border: '1px solid rgba(16,185,129,0.25)',
+                  background: 'rgba(16,185,129,0.08)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: '#10b981',
+                }}>
+                  {f.icon}
+                </div>
+                <div>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: '#e2e8f0', marginBottom: 2 }}>{f.title}</p>
+                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', lineHeight: 1.6 }}>{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Testimonial */}
+          <div style={{
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(255,255,255,0.07)',
+            borderRadius: 12, padding: '16px 18px',
+            position: 'relative', overflow: 'hidden',
+          }}>
+            <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0, height: 1,
+              background: 'linear-gradient(90deg, transparent, rgba(16,185,129,0.4), transparent)',
+            }} />
+            <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+              <div style={{
+                width: 34, height: 34, minWidth: 34, borderRadius: '50%',
+                background: 'linear-gradient(135deg, #10b981, #0d9488)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 11, fontWeight: 700, color: '#fff',
+                fontFamily: "'DM Mono', monospace",
+              }}>AO</div>
+              <div>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', lineHeight: 1.65 }}>
+                  "Finora got me approved in minutes. Transparent rates, zero hidden fees."
+                </p>
+                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', marginTop: 6, fontFamily: "'DM Mono', monospace" }}>
+                  Amara O. — Lagos, NG
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: 12, fontSize: 11, color: 'rgba(255,255,255,0.2)', fontFamily: "'DM Mono', monospace", letterSpacing: '0.08em' }}>
+          <span>REGULATED</span><span>·</span><span>TRANSPARENT</span><span>·</span><span>TRUSTED</span>
+        </div>
+      </aside>
+
+      {/* ── Form panel ── */}
+      <main style={{
+        flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: '40px 20px', position: 'relative', zIndex: 1,
+      }}>
+        <div style={{ width: '100%', maxWidth: 400 }}>
+
+          {/* Mobile wordmark */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 32 }} className="mobile-logo">
+            <div style={{
+              width: 28, height: 28, borderRadius: 7,
+              background: 'linear-gradient(135deg, #10b981, #0d9488)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Zap size={13} color="#fff" />
+            </div>
+            <span style={{ fontSize: 16, fontWeight: 600, color: '#f1f5f9' }}>Finora</span>
+          </div>
+
+          {/* Heading */}
+          <div style={{ marginBottom: 28 }}>
+            <p style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#10b981', fontFamily: "'DM Mono', monospace", marginBottom: 10 }}>
+              NEW ACCOUNT
             </p>
-
-            {/* Benefits */}
-            <div className="space-y-6">
-              <Feature icon={<TrendingUp />} title="Instant Access">
-                Apply for loans and track progress in real time.
-              </Feature>
-              <Feature icon={<ShieldCheck />} title="Secure by Design">
-                Industry-grade encryption keeps your data safe.
-              </Feature>
-              <Feature icon={<Users />} title="Trusted Platform">
-                Join over 150,000 users growing financially with Finora.
-              </Feature>
-            </div>
+            <h1 style={{ fontSize: 24, fontWeight: 700, color: '#f1f5f9', letterSpacing: '-0.03em', lineHeight: 1.2, marginBottom: 6 }}>
+              Create your account
+            </h1>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)' }}>
+              Get started in minutes. No paperwork.
+            </p>
           </div>
 
-          {/* Footer */}
-          <div className="border-t border-white/10 pt-6 text-sm text-white/60">
-            Regulated • Transparent • Trusted
-          </div>
-        </aside>
+          {/* Error */}
+          {error && (
+            <div style={{
+              padding: '10px 14px', marginBottom: 20,
+              background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
+              borderRadius: 8, fontSize: 13, color: '#fca5a5',
+              fontFamily: "'DM Mono', monospace",
+            }}>
+              ⚠ {error}
+            </div>
+          )}
 
-        {/* Register Form */}
-        <main className="flex flex-1 items-center justify-center  md:px-6 px-3 py-6  md:py-12">
-          <div className="w-full max-w-md bg-white rounded-3xl p-10 shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-            <div className="text-center mb-8">
-              <h3 className="text-2xl font-semibold text-[#0A2540] mb-1">
-                Create Your Account
-              </h3>
-              <p className="text-slate-500">
-                Get started with Finora in minutes
-              </p>
+            {/* Name row */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <Field label="First name" value={firstName} onChange={setFirstName} placeholder="Andrew" />
+              <Field label="Last name"  value={lastName}  onChange={setLastName}  placeholder="Adetokunbo" />
             </div>
 
-            <form className="space-y-5">
-              {error && (
-                <div className="p-3 text-sm text-red-600 bg-red-50 rounded-xl border border-red-100">
-                  {error}
-                </div>
-              )}
+            <Field label="Email address" type="email" value={email} onChange={setEmail} placeholder="you@example.com" />
 
-              <div>
-                <label className="block text-sm font-medium text-[#1F2937] mb-1">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl border-2 border-transparent focus:border-[#1DBF73] focus:bg-white outline-none transition"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-[#1F2937] mb-1">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl border-2 border-transparent focus:border-[#1DBF73] focus:bg-white outline-none transition"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-[#1F2937] mb-1">
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Create a password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl border-2 border-transparent focus:border-[#1DBF73] focus:bg-white outline-none transition"
-                  />
-                  <span 
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer hover:text-[#1DBF73] transition-colors"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    <Eye size={18} />
+            {/* Password */}
+            <div>
+              <Field
+                label="Password"
+                type={showPw ? 'text' : 'password'}
+                value={password}
+                onChange={setPassword}
+                placeholder="Min. 8 characters"
+                suffix={
+                  <span onClick={() => setShowPw(!showPw)} style={{ color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>
+                    {showPw ? <EyeOff size={15} /> : <Eye size={15} />}
                   </span>
-                </div>
-              </div>
+                }
+              />
+              <PasswordStrengthBar password={password} />
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-[#1F2937] mb-1">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#F5F7FA] rounded-xl border-2 border-transparent focus:border-[#1DBF73] focus:bg-white outline-none transition"
-                  />
-                  <span 
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 cursor-pointer hover:text-[#1DBF73] transition-colors"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  >
-                    <Eye size={18} />
-                  </span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleRegister}
-                disabled={loading}
-                className="w-full py-3.5 text-white font-semibold rounded-xl bg-linear-to-br from-[#1DBF73] to-[#17a865] hover:-translate-y-0.5 transition flex items-center justify-center gap-2 shadow disabled:opacity-70 disabled:hover:translate-y-0"
-              >
-                {loading ? "Creating Account..." : "Create Account"}
-                {!loading && <ArrowRight size={18} />}
-              </button>
-            </form>
+            <Field
+              label="Confirm password"
+              type={showCpw ? 'text' : 'password'}
+              value={confirm}
+              onChange={setConfirm}
+              placeholder="Repeat password"
+              suffix={
+                <span onClick={() => setShowCpw(!showCpw)} style={{ color: 'rgba(255,255,255,0.3)', cursor: 'pointer' }}>
+                  {showCpw ? <EyeOff size={15} /> : <Eye size={15} />}
+                </span>
+              }
+            />
 
             {/* Divider */}
-            <div className="relative my-4 text-center">
-              <div className="absolute inset-x-0 top-1/2 h-px bg-slate-200"></div>
-              <span className="relative bg-white px-4 text-sm text-slate-500">
-                or sign up with
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '2px 0' }} />
+
+            {/* Terms */}
+            <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer' }}>
+              <div
+                onClick={() => setTerms(!terms)}
+                style={{
+                  width: 16, height: 16, minWidth: 16, marginTop: 1, borderRadius: 4,
+                  border: terms ? '1.5px solid #10b981' : '1.5px solid rgba(255,255,255,0.18)',
+                  background: terms ? 'rgba(16,185,129,0.15)' : 'transparent',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'all 0.2s', cursor: 'pointer',
+                }}
+              >
+                {terms && <Check size={10} color="#10b981" strokeWidth={3} />}
+              </div>
+              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6 }}>
+                I agree to the{' '}
+                <span style={{ color: '#10b981', textDecoration: 'underline', textUnderlineOffset: 2, cursor: 'pointer' }}>Terms of Service</span>
+                {' '}and{' '}
+                <span style={{ color: '#10b981', textDecoration: 'underline', textUnderlineOffset: 2, cursor: 'pointer' }}>Privacy Policy</span>
               </span>
-            </div>
+            </label>
 
-            {/* Google (UI Only)
+            {/* Submit */}
             <button
-              type="button"
-              className="w-full flex items-center justify-center gap-3 py-3 border-2 border-slate-200 rounded-xl font-medium hover:border-[#1DBF73] hover:bg-[#f8fffe] transition"
+              onClick={handleRegister}
+              disabled={loading || success}
+              style={{
+                width: '100%', padding: '12px 20px', borderRadius: 8, border: 'none',
+                fontSize: 14, fontWeight: 600, cursor: loading || success ? 'default' : 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                transition: 'all 0.2s',
+                background: success
+                  ? 'linear-gradient(135deg, #059669, #0d9488)'
+                  : 'linear-gradient(135deg, #10b981, #0d9488)',
+                color: '#fff',
+                opacity: loading ? 0.8 : 1,
+                letterSpacing: '-0.01em',
+                boxShadow: success || loading ? 'none' : '0 0 24px rgba(16,185,129,0.25)',
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+              onMouseEnter={(e) => { if (!loading && !success) (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-1px)'; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)'; }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24">
-                <path
-                  fill="#EA4335"
-                  d="M12 10.2v3.6h5.1c-.2 1.3-1.5 3.8-5.1 3.8-3.1 0-5.6-2.6-5.6-5.6S8.9 6.4 12 6.4c1.8 0 3 .7 3.7 1.3l2.5-2.4C16.7 3.8 14.6 3 12 3 7.6 3 4 6.6 4 12s3.6 9 8 9c4.6 0 7.6-3.2 7.6-7.7 0-.5-.1-.9-.1-1.1H12z"
-                />
-              </svg>
-              Continue with Google
-            </button> */}
+              {success ? (
+                <><Check size={15} /> Account created!</>
+              ) : loading ? (
+                <><Loader2 size={15} className="animate-spin" /> Creating your account…</>
+              ) : (
+                <>Create account <ArrowRight size={15} /></>
+              )}
+            </button>
 
-            <div className="text-center text-sm text-slate-500">
+            <p style={{ textAlign: 'center', fontSize: 13, color: 'rgba(255,255,255,0.35)', marginTop: 4 }}>
               Already have an account?{' '}
-              <span onClick={handleLoginRedirect} className="text-[#1DBF73] font-semibold cursor-pointer hover:underline">
+              <span
+                onClick={() => navigate('/login')}
+                style={{ color: '#10b981', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 2 }}
+              >
                 Sign in
               </span>
-            </div>
+            </p>
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
 
-      {/* Animations */}
+      {/* Responsive styles */}
       <style>{`
-        @keyframes float {
-          0%,100% { transform: translate(0,0); }
-          50% { transform: translate(60px,-60px); }
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        input::placeholder { color: rgba(255,255,255,0.18) !important; }
+
+        @media (min-width: 1024px) {
+          .sidebar-panel { display: flex !important; }
+          .mobile-logo   { display: none !important; }
         }
-        @keyframes pulse-soft {
-          0%,100% { transform: scale(1); }
-          50% { transform: scale(1.05); }
+
+        .animate-spin {
+          animation: spin 0.8s linear infinite;
         }
-        .animate-float { animation: float 20s infinite ease-in-out; }
-        .animate-float-delayed { animation: float 20s infinite ease-in-out -8s; }
-        .animate-pulse-soft { animation: pulse-soft 2s infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
       `}</style>
     </div>
   );

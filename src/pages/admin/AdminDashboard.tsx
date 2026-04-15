@@ -21,38 +21,38 @@ const AdminDashboard: FC = () => {
     <AdminLayout>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
         <div>
-          <h2 className="text-3xl font-bold text-[#0A2540]">Admin Overview</h2>
-          <p className="text-[#1F2937]">System activity and loan metrics</p>
+          <h2 className="text-3xl font-bold text-[#001a33]">Admin Overview</h2>
+          <p className="text-[#001a33]">System activity and loan metrics</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
         <div className="bg-white rounded-2xl shadow p-6 border-l-4 border-yellow-400">
           <p className="text-sm text-gray-500 mb-1">Pending Requests</p>
-          <h4 className="text-3xl font-bold text-[#0A2540]">{totalPending}</h4>
+          <h4 className="text-3xl font-bold text-[#001a33]">{totalPending}</h4>
         </div>
         <div className="bg-white rounded-2xl shadow p-6 border-l-4 border-blue-500">
           <p className="text-sm text-gray-500 mb-1">Registered Users</p>
-          <h4 className="text-3xl font-bold text-[#0A2540]">{userCount}</h4>
+          <h4 className="text-3xl font-bold text-[#001a33]">{userCount}</h4>
         </div>
-        <div className="bg-white rounded-2xl shadow p-6 border-l-4 border-[#1DBF73]">
+        <div className="bg-white rounded-2xl shadow p-6 border-l-4 border-[#001a33]">
           <p className="text-sm text-gray-500 mb-1">Total Disbursed Volume</p>
-          <h4 className="text-3xl font-bold text-[#0A2540]">₦{totalVolume.toLocaleString()}</h4>
+          <h4 className="text-3xl font-bold text-[#001a33]">₦{totalVolume.toLocaleString()}</h4>
         </div>
       </div>
 
       <div className="bg-white rounded-2xl shadow p-6">
-        <h3 className="text-xl font-semibold text-[#0A2540] mb-4">Recent Portfolio Activity</h3>
+        <h3 className="text-xl font-semibold text-[#001a33] mb-4">Recent Portfolio Activity</h3>
         {activeLoans.length > 0 ? (
           <div className="space-y-4">
             {activeLoans.slice(-5).reverse().map((loan) => (
               <div key={loan.id} className="flex justify-between items-center pb-3 border-b last:border-0 hover:bg-gray-50 p-2 rounded">
                 <div>
-                  <p className="font-semibold text-[#0A2540]">{loan.id}</p>
+                  <p className="font-semibold text-[#001a33]">{loan.id}</p>
                   <p className="text-xs text-gray-500">Tenure: {loan.tenure} months</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-bold text-[#1DBF73]">₦{loan.amount.toLocaleString()}</p>
+                  <p className="font-bold text-[#001a33]">₦{loan.amount.toLocaleString()}</p>
                   <p className="text-xs text-gray-400">{loan.startDate}</p>
                 </div>
               </div>

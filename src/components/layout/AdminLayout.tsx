@@ -30,11 +30,11 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
   ];
 
   return (
-    <div className="flex min-h-screen bg-[#F5F7FA]">
+    <div className="flex min-h-screen bg-[#f0f4fa]">
       {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#1DBF73] flex items-center justify-between px-4 py-4">
-        <h1 className="text-lg font-bold text-[#0A2540]">Finora Admin</h1>
-        <button onClick={() => setOpen(true)} className="text-[#0A2540]" aria-label="Open menu">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#ffffff] flex items-center justify-between px-4 py-4">
+        <h1 className="text-lg font-bold text-[#001a33]">Finora Admin</h1>
+        <button onClick={() => setOpen(true)} className="text-[#001a33]" aria-label="Open menu">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
@@ -46,7 +46,7 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
 
       {/* Mobile Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-[#1DBF73] text-[#0A2540] z-50 transform transition-transform duration-300 lg:hidden
+        className={`fixed top-0 left-0 h-full w-64 bg-[#ffffff] text-[#001a33] z-50 transform transition-transform duration-300 lg:hidden
           ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="p-6 flex flex-col h-full justify-between">
@@ -68,7 +68,7 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
           </div>
           <button
             onClick={handleLogout}
-            className="w-full mt-6 px-4 py-3 rounded-lg bg-[#0A2540]/10 text-[#0A2540] hover:bg-[#0A2540]/20 transition font-medium"
+            className="w-full mt-6 px-4 py-3 rounded-lg bg-[#001a33]/10 text-[#001a33] hover:bg-[#001a33]/20 transition font-medium"
           >
             Logout
           </button>
@@ -76,7 +76,7 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
       </aside>
 
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex fixed top-0 left-0 h-full w-64 bg-[#1DBF73] text-[#0A2540] flex-col justify-between z-30">
+      <aside className="hidden lg:flex fixed top-0 left-0 h-full w-64 bg-[#ffffff] text-[#001a33] flex-col justify-between z-30">
         <div className="p-6">
           <h1 className="text-2xl font-bold mb-10 tracking-tight">Finora Admin</h1>
           <nav className="space-y-2">
@@ -93,11 +93,11 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
         <div className="p-6 space-y-4">
           <button
             onClick={handleLogout}
-            className="w-full px-4 py-3 rounded-lg bg-[#0A2540]/10 text-[#0A2540] hover:bg-[#0A2540]/20 transition font-medium"
+            className="w-full px-4 py-3 rounded-lg bg-[#001a33]/10 text-[#001a33] hover:bg-[#001a33]/20 transition font-medium"
           >
             Logout
           </button>
-          <p className="text-sm text-[#0A2540]/60">© {new Date().getFullYear()} Finora</p>
+          <p className="text-sm text-[#001a33]/60">© {new Date().getFullYear()} Finora</p>
         </div>
       </aside>
 
@@ -117,7 +117,7 @@ const NavItem: FC<NavItemProps> = ({ label, active, onClick }) => (
   <button
     onClick={onClick}
     className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-lg font-bold transition
-      ${active ? "bg-[#0A2540] text-white" : "hover:bg-[#0A2540]/10 text-[#0A2540]"}`}
+      ${active ? "bg-[#001a33] text-white" : "hover:bg-[#001a33]/10 text-[#001a33]"}`}
   >
     {label}
   </button>
