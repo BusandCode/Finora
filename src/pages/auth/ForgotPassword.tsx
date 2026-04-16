@@ -1,6 +1,6 @@
 import React, { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Mail, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Mail, CheckCircle2, AlertCircle, Zap } from 'lucide-react';
 import { authService } from '../../services/authService';
 
 type FormState = 'input' | 'sending' | 'success' | 'error';
@@ -15,7 +15,6 @@ const ForgotPassword: React.FC = () => {
     e.preventDefault();
     setFormState('sending');
     setErrorMessage('');
-
     try {
       await authService.forgotPassword(email);
       setFormState('success');
@@ -25,259 +24,373 @@ const ForgotPassword: React.FC = () => {
     }
   };
 
-  const handleBackToLogin = () => {
-    navigate('/login');
-  };
-
-  const handleSignUp = () => {
-    navigate('/register');
-  };
-
-  const handleTryAgain = () => {
-    setFormState('input');
-    setErrorMessage('');
-  };
+  const handleBackToLogin = () => navigate('/login');
+  const handleSignUp = () => navigate('/register');
+  const handleTryAgain = () => { setFormState('input'); setErrorMessage(''); };
 
   return (
-    <div className="h-screen bg-finora-light relative overflow-hidden font-outfit">
-      {/* Animated Background Orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute w-125 h-125 rounded-full blur-[80px] opacity-15 bg-linear-to-br from-finora-navy to-finora-emerald -top-[10%] -left-[10%] animate-float"></div>
-        <div className="absolute w-100 h-100 rounded-full blur-[80px] opacity-15 bg-linear-to-br from-finora-accent to-finora-emerald -bottom-[5%] -right-[5%] animate-float-delayed-7"></div>
-        <div className="absolute w-87.5 h-87.5 rounded-full blur-[80px] opacity-15 bg-linear-to-br from-finora-emerald to-finora-navy top-[40%] left-[50%] animate-float-delayed-14"></div>
-      </div>
+    <div style={{
+      minHeight: '100vh',
+      background: '#080c14',
+      color: '#f1f5f9',
+      fontFamily: "'DM Sans', sans-serif",
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 'clamp(20px, 5vw, 48px)',
+      position: 'relative',
+      overflowX: 'hidden',
+    }}>
+      {/* Dot grid */}
+      <div style={{
+        position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0,
+        backgroundImage: 'radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px)',
+        backgroundSize: '28px 28px',
+      }} />
 
-      {/* Main Content */}
-      <div className="relative z-10 h-full flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto">
-        <div className="w-full max-w-120 bg-white rounded-3xl p-8 sm:p-10 lg:p-12 shadow-[0_4px_6px_rgba(0,0,0,0.02),0_12px_24px_rgba(0,0,0,0.04)] animate-slide-in-right my-auto">
-          
-          {/* Back Button */}
-          <button
-            onClick={handleBackToLogin}
-            className="flex items-center gap-2 text-finora-dark hover:text-finora-emerald transition-colors duration-200 mb-8 group"
-          >
-            <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform duration-200" />
-            <span className="text-sm font-medium">Back to login</span>
-          </button>
+      {/* Glow orb */}
+      <div style={{
+        position: 'fixed', top: '-15%', left: '50%', transform: 'translateX(-50%)',
+        width: 700, height: 500, borderRadius: '50%', pointerEvents: 'none', zIndex: 0,
+        background: 'radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 65%)',
+      }} />
 
-          {/* Input State */}
-          {(formState === 'input' || formState === 'sending') && (
-            <>
-              {/* Header */}
-              <div className="mb-8">
-                <div className="w-16 h-16 bg-finora-emerald/10 rounded-2xl flex items-center justify-center mb-6">
-                  <Mail size={32} className="text-finora-emerald" />
-                </div>
-                <h1 className="text-3xl sm:text-4xl font-semibold text-finora-navy mb-3 tracking-tight">
-                  Forgot Password?
-                </h1>
-                <p className="text-base text-slate-600 leading-relaxed">
-                  No worries! Enter your email address and we'll send you instructions to reset your password.
-                </p>
+      {/* Card */}
+      <div style={{
+        position: 'relative', zIndex: 1,
+        width: '100%', maxWidth: 460,
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: 20,
+        padding: 'clamp(28px, 5vw, 48px)',
+        backdropFilter: 'blur(12px)',
+        boxShadow: '0 0 60px rgba(0,0,0,0.4)',
+      }}>
+
+        {/* Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 32 }}>
+          <div style={{
+            width: 28, height: 28, borderRadius: 7,
+            background: 'linear-gradient(135deg,#10b981,#0d9488)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <Zap size={13} color="#fff" />
+          </div>
+          <span style={{ fontSize: 16, fontWeight: 700, color: '#f1f5f9', letterSpacing: '-0.02em' }}>Finora</span>
+        </div>
+
+        {/* Back button */}
+        <button
+          onClick={handleBackToLogin}
+          style={{
+            display: 'flex', alignItems: 'center', gap: 7,
+            background: 'transparent', border: 'none', cursor: 'pointer',
+            color: 'rgba(255,255,255,0.4)', fontSize: 13, fontWeight: 500,
+            marginBottom: 28, padding: 0, transition: 'color 0.2s',
+            fontFamily: "'DM Sans', sans-serif",
+          }}
+          onMouseEnter={e => (e.currentTarget.style.color = '#10b981')}
+          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.4)')}
+        >
+          <ArrowLeft size={15} />
+          Back to login
+        </button>
+
+        {/* ── INPUT / SENDING STATE ── */}
+        {(formState === 'input' || formState === 'sending') && (
+          <>
+            {/* Icon */}
+            <div style={{
+              width: 44, height: 44, borderRadius: 11,
+              background: 'rgba(16,185,129,0.08)',
+              border: '1px solid rgba(16,185,129,0.25)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              marginBottom: 20,
+            }}>
+              <Mail size={20} color="#10b981" />
+            </div>
+
+            <h1 style={{
+              fontSize: 'clamp(22px,4vw,28px)', fontWeight: 700,
+              letterSpacing: '-0.03em', color: '#f1f5f9', marginBottom: 8,
+            }}>
+              Forgot Password?
+            </h1>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7, marginBottom: 28 }}>
+              No worries! Enter your email and we'll send you instructions to reset your password.
+            </p>
+
+            {/* Inline error */}
+            {formState === 'input' && errorMessage && (
+              <div style={{
+                display: 'flex', alignItems: 'flex-start', gap: 10,
+                padding: '12px 14px', borderRadius: 10, marginBottom: 20,
+                background: 'rgba(239,68,68,0.07)',
+                border: '1px solid rgba(239,68,68,0.2)',
+              }}>
+                <AlertCircle size={15} color="#f87171" style={{ flexShrink: 0, marginTop: 1 }} />
+                <p style={{ fontSize: 12, color: '#f87171', lineHeight: 1.6 }}>{errorMessage}</p>
               </div>
+            )}
 
-              {/* Error Alert */}
-              {formState === 'input' && errorMessage && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3 animate-slide-in-right">
-                  <AlertCircle size={20} className="text-red-600 shrink-0 mt-0.5" />
-                  <p className="text-sm text-red-700">{errorMessage}</p>
-                </div>
-              )}
+            {/* Form */}
+            <form onSubmit={handleSubmit}>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.5)', marginBottom: 8, letterSpacing: '0.04em' }}>
+                EMAIL ADDRESS
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="you@example.com"
+                required
+                disabled={formState === 'sending'}
+                style={{
+                  width: '100%', padding: '12px 14px',
+                  fontSize: 14, color: '#f1f5f9',
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 10, outline: 'none',
+                  fontFamily: "'DM Sans', sans-serif",
+                  marginBottom: 20, boxSizing: 'border-box',
+                  transition: 'border-color 0.2s, box-shadow 0.2s',
+                  opacity: formState === 'sending' ? 0.5 : 1,
+                }}
+                onFocus={e => {
+                  e.target.style.borderColor = 'rgba(16,185,129,0.5)';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(16,185,129,0.1)';
+                }}
+                onBlur={e => {
+                  e.target.style.borderColor = 'rgba(255,255,255,0.1)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              />
 
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Email Field */}
-                <div>
-                  <label 
-                    htmlFor="email" 
-                    className="block text-sm font-medium text-finora-dark mb-2"
-                  >
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    required
-                    disabled={formState === 'sending'}
-                    className="w-full px-4 py-3.5 text-base text-finora-dark bg-finora-light border-2 border-transparent rounded-xl transition-all duration-300 outline-none focus:bg-white focus:border-finora-emerald focus:shadow-[0_0_0_4px_rgba(29,191,115,0.1)] placeholder:text-slate-400 disabled:opacity-60 disabled:cursor-not-allowed"
-                  />
-                </div>
+              <button
+                type="submit"
+                disabled={formState === 'sending'}
+                style={{
+                  width: '100%', padding: '13px',
+                  fontSize: 14, fontWeight: 600,
+                  background: 'linear-gradient(135deg,#10b981,#0d9488)',
+                  color: '#fff', border: 'none', borderRadius: 10,
+                  cursor: formState === 'sending' ? 'not-allowed' : 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  boxShadow: '0 0 24px rgba(16,185,129,0.2)',
+                  fontFamily: "'DM Sans', sans-serif",
+                  transition: 'all 0.2s',
+                  opacity: formState === 'sending' ? 0.75 : 1,
+                }}
+                onMouseEnter={e => { if (formState !== 'sending') (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-1px)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)'; }}
+              >
+                {formState === 'sending' ? (
+                  <>
+                    <div style={{
+                      width: 14, height: 14, borderRadius: '50%',
+                      border: '2px solid rgba(255,255,255,0.3)',
+                      borderTopColor: '#fff',
+                      animation: 'spin 0.7s linear infinite',
+                    }} />
+                    Sending Reset Link...
+                  </>
+                ) : (
+                  <> Send Reset Link <Mail size={15} /> </>
+                )}
+              </button>
+            </form>
 
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={formState === 'sending'}
-                  className="w-full px-4 py-4 text-base font-semibold text-white bg-linear-to-br from-[#001a33] to-[#0d1f34] border-none rounded-xl cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_4px_12px_rgba(0,26,51,0.2)] hover:shadow-[0_8px_20px_rgba(0,26,51,0.3)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-                >
-                  {formState === 'sending' ? (
-                    <>
-                      <div className="w-4.5 h-4.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      Sending Reset Link...
-                    </>
-                  ) : (
-                    <>
-                      Send Reset Link
-                      <Mail size={20} />
-                    </>
-                  )}
-                </button>
-              </form>
+            {/* Footer hint */}
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center', marginTop: 24 }}>
+              Remember your password?{' '}
+              <button onClick={handleBackToLogin} style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                color: '#10b981', fontWeight: 600, fontSize: 12,
+                fontFamily: "'DM Sans', sans-serif", padding: 0,
+              }}>Sign in instead</button>
+            </p>
+          </>
+        )}
 
-              {/* Help Text */}
-              <div className="mt-8 p-4 bg-finora-light rounded-xl">
-                <p className="text-sm text-slate-600 text-center">
-                  Remember your password?{' '}
-                  <button 
-                    onClick={handleBackToLogin}
-                    className="text-[#001a33] font-semibold hover:text-[#0d1f34] transition-colors duration-200"
-                  >
-                    Sign in instead
-                  </button>
-                </p>
+        {/* ── SUCCESS STATE ── */}
+        {formState === 'success' && (
+          <>
+            <div style={{ textAlign: 'center', marginBottom: 28 }}>
+              <div style={{
+                width: 52, height: 52, borderRadius: '50%', margin: '0 auto 20px',
+                background: 'rgba(16,185,129,0.08)',
+                border: '1px solid rgba(16,185,129,0.25)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <CheckCircle2 size={24} color="#10b981" />
               </div>
-            </>
-          )}
+              <h1 style={{ fontSize: 'clamp(22px,4vw,28px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#f1f5f9', marginBottom: 8 }}>
+                Check Your Email
+              </h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>
+                We've sent reset instructions to
+              </p>
+              <p style={{ fontSize: 14, fontWeight: 600, color: '#10b981', marginTop: 6 }}>{email}</p>
+            </div>
 
-          {/* Success State */}
-          {formState === 'success' && (
-            <>
-              {/* Success Icon */}
-              <div className="text-center mb-8 animate-slide-in-right">
-                <div className="w-20 h-20 bg-finora-emerald/10 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-soft">
-                  <CheckCircle2 size={40} className="text-finora-emerald" />
+            {/* Steps */}
+            <div style={{
+              padding: '16px', borderRadius: 10, marginBottom: 16,
+              background: 'rgba(255,255,255,0.025)',
+              border: '1px solid rgba(255,255,255,0.07)',
+            }}>
+              <p style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12, fontFamily: "'DM Mono', monospace" }}>
+                What's next?
+              </p>
+              {[
+                'Check your inbox for an email from Finora',
+                'Click the reset link — valid for 1 hour',
+                'Create a new strong password',
+              ].map((step, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: i < 2 ? 8 : 0 }}>
+                  <span style={{ color: '#10b981', fontSize: 12, marginTop: 1, flexShrink: 0 }}>•</span>
+                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6 }}>{step}</span>
                 </div>
-                <h1 className="text-3xl sm:text-4xl font-semibold text-finora-navy mb-3 tracking-tight">
-                  Check Your Email
-                </h1>
-                <p className="text-base text-slate-600 leading-relaxed">
-                  We've sent password reset instructions to
-                </p>
-                <p className="text-base font-semibold text-finora-navy mt-2">
-                  {email}
-                </p>
+              ))}
+            </div>
+
+            <div style={{
+              padding: '12px 14px', borderRadius: 10, marginBottom: 24,
+              background: 'rgba(251,191,36,0.05)',
+              border: '1px solid rgba(251,191,36,0.15)',
+            }}>
+              <p style={{ fontSize: 12, color: 'rgba(251,191,36,0.8)', lineHeight: 1.6 }}>
+                <strong>Didn't receive it?</strong> Check your spam folder or{' '}
+                <button onClick={handleTryAgain} style={{
+                  background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                  color: 'rgba(251,191,36,0.9)', fontWeight: 600, fontSize: 12,
+                  fontFamily: "'DM Sans', sans-serif", textDecoration: 'underline',
+                }}>try again</button>
+              </p>
+            </div>
+
+            <button
+              onClick={handleBackToLogin}
+              style={{
+                width: '100%', padding: '13px', fontSize: 14, fontWeight: 600,
+                background: 'transparent',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: 10, cursor: 'pointer',
+                color: 'rgba(255,255,255,0.7)',
+                fontFamily: "'DM Sans', sans-serif",
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(16,185,129,0.4)';
+                (e.currentTarget as HTMLButtonElement).style.color = '#f1f5f9';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.1)';
+                (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.7)';
+              }}
+            >
+              Back to Login
+            </button>
+          </>
+        )}
+
+        {/* ── ERROR STATE ── */}
+        {formState === 'error' && (
+          <>
+            <div style={{ textAlign: 'center', marginBottom: 28 }}>
+              <div style={{
+                width: 52, height: 52, borderRadius: '50%', margin: '0 auto 20px',
+                background: 'rgba(239,68,68,0.07)',
+                border: '1px solid rgba(239,68,68,0.2)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <AlertCircle size={24} color="#f87171" />
               </div>
+              <h1 style={{ fontSize: 'clamp(22px,4vw,28px)', fontWeight: 700, letterSpacing: '-0.03em', color: '#f1f5f9', marginBottom: 8 }}>
+                Email Not Found
+              </h1>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.7 }}>
+                We couldn't find an account for{' '}
+                <span style={{ color: '#f1f5f9', fontWeight: 600 }}>{email}</span>
+              </p>
+            </div>
 
-              {/* Instructions */}
-              <div className="space-y-4 mb-8">
-                <div className="p-4 bg-finora-light rounded-xl">
-                  <h3 className="text-sm font-semibold text-finora-dark mb-2">
-                    📧 What's next?
-                  </h3>
-                  <ul className="space-y-2 text-sm text-slate-600">
-                    <li className="flex items-start gap-2">
-                      <span className="text-finora-emerald mt-1">•</span>
-                      <span>Check your inbox for an email from Finora</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-finora-emerald mt-1">•</span>
-                      <span>Click the reset link (valid for 1 hour)</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-finora-emerald mt-1">•</span>
-                      <span>Create a new strong password</span>
-                    </li>
-                  </ul>
+            {/* Suggestions */}
+            <div style={{
+              padding: '16px', borderRadius: 10, marginBottom: 24,
+              background: 'rgba(255,255,255,0.025)',
+              border: '1px solid rgba(255,255,255,0.07)',
+            }}>
+              <p style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12, fontFamily: "'DM Mono', monospace" }}>
+                Try these steps
+              </p>
+              {[
+                'Double-check your email for typos',
+                'Try a different email you might have used',
+                'Make sure you have an account with Finora',
+              ].map((tip, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: i < 2 ? 8 : 0 }}>
+                  <span style={{ color: '#f87171', fontSize: 12, marginTop: 1, flexShrink: 0 }}>•</span>
+                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6 }}>{tip}</span>
                 </div>
+              ))}
+            </div>
 
-                <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                  <p className="text-sm text-amber-800">
-                    <span className="font-semibold">Didn't receive it?</span> Check your spam folder or{' '}
-                    <button 
-                      onClick={handleTryAgain}
-                      className="font-semibold underline hover:text-amber-900 transition-colors duration-200"
-                    >
-                      try again
-                    </button>
-                  </p>
-                </div>
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <button
+                onClick={handleTryAgain}
+                style={{
+                  width: '100%', padding: '13px', fontSize: 14, fontWeight: 600,
+                  background: 'linear-gradient(135deg,#10b981,#0d9488)',
+                  color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer',
+                  boxShadow: '0 0 24px rgba(16,185,129,0.2)',
+                  fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-1px)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(0)'; }}
+              >
+                Try Another Email
+              </button>
 
-              {/* Back to Login */}
               <button
                 onClick={handleBackToLogin}
-                className="w-full px-4 py-4 text-base font-semibold text-finora-navy bg-finora-light border-2 border-finora-light rounded-xl transition-all duration-300 hover:border-finora-emerald hover:bg-white hover:shadow-md"
+                style={{
+                  width: '100%', padding: '13px', fontSize: 14, fontWeight: 600,
+                  background: 'transparent', border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 10, cursor: 'pointer', color: 'rgba(255,255,255,0.7)',
+                  fontFamily: "'DM Sans', sans-serif", transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(16,185,129,0.4)';
+                  (e.currentTarget as HTMLButtonElement).style.color = '#f1f5f9';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.1)';
+                  (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.7)';
+                }}
               >
                 Back to Login
               </button>
-            </>
-          )}
+            </div>
 
-          {/* Error State */}
-          {formState === 'error' && (
-            <>
-              {/* Error Icon */}
-              <div className="text-center mb-8 animate-slide-in-right">
-                <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <AlertCircle size={40} className="text-red-600" />
-                </div>
-                <h1 className="text-3xl sm:text-4xl font-semibold text-finora-navy mb-3 tracking-tight">
-                  Email Not Found
-                </h1>
-                <p className="text-base text-slate-600 leading-relaxed">
-                  We couldn't find an account associated with{' '}
-                  <span className="font-semibold text-finora-navy">{email}</span>
-                </p>
-              </div>
-
-              {/* Suggestions */}
-              <div className="space-y-4 mb-8">
-                <div className="p-4 bg-finora-light rounded-xl">
-                  <h3 className="text-sm font-semibold text-finora-dark mb-3">
-                    Try these steps:
-                  </h3>
-                  <ul className="space-y-2 text-sm text-slate-600">
-                    <li className="flex items-start gap-2">
-                      <span className="text-finora-accent mt-1">•</span>
-                      <span>Double-check your email for typos</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-finora-accent mt-1">•</span>
-                      <span>Try a different email address you might have used</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-finora-accent mt-1">•</span>
-                      <span>Make sure you have an account with Finora</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="space-y-3">
-                <button
-                  onClick={handleTryAgain}
-                  className="w-full px-4 py-4 text-base font-semibold text-white bg-linear-to-br from-[#001a33] to-[#0d1f34] border-none rounded-xl cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 shadow-[0_4px_12px_rgba(0,26,51,0.2)] hover:shadow-[0_8px_20px_rgba(0,26,51,0.3)] hover:-translate-y-0.5"
-                >
-                  Try Another Email
-                </button>
-                
-                <button
-                  onClick={handleBackToLogin}
-                  className="w-full px-4 py-4 text-base font-semibold text-finora-navy bg-finora-light border-2 border-finora-light rounded-xl transition-all duration-300 hover:border-[#001a33] hover:bg-white hover:shadow-md"
-                >
-                  Back to Login
-                </button>
-              </div>
-
-              {/* Sign Up Prompt */}
-              <div className="mt-6 p-4 bg-finora-light rounded-xl">
-                <p className="text-sm text-slate-600 text-center">
-                  Don't have an account?{' '}
-                  <span 
-                    onClick={handleSignUp}
-                    className="text-[#001a33] font-semibold hover:text-[#0d1f34] transition-colors duration-200 cursor-pointer"
-                  >
-                    Sign up for free
-                  </span>
-                </p>
-              </div>
-            </>
-          )}
-        </div>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.25)', textAlign: 'center', marginTop: 20 }}>
+              Don't have an account?{' '}
+              <button onClick={handleSignUp} style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                color: '#10b981', fontWeight: 600, fontSize: 12,
+                fontFamily: "'DM Sans', sans-serif", padding: 0,
+              }}>Sign up for free</button>
+            </p>
+          </>
+        )}
       </div>
+
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        input::placeholder { color: rgba(255,255,255,0.2); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   );
 };

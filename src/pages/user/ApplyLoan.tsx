@@ -134,7 +134,7 @@ const ApplyLoan: FC = () => {
 
   return (
     <DashboardLayout>
-      <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 780, margin: "0 auto", padding: "8px 0 40px" }}>
+      <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 780, margin: "0 auto", padding: "40px 0 40px" }}>
 
         {/* Header */}
         <motion.div
