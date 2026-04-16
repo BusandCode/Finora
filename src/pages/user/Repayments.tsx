@@ -8,158 +8,167 @@ const Repayments: FC = () => {
   const [repayments, setRepayments] = useState<Repayment[]>([]);
 
   useEffect(() => {
-    if (user) {
-      setRepayments(dataService.getUserRepayments(user.id));
-    }
+    if (user) setRepayments(dataService.getUserRepayments(user.id));
   }, [user]);
 
-  const totalPaid = repayments
-    .filter((r) => r.status === "Paid")
-    .reduce((sum, r) => sum + r.amount, 0);
-
-  const pendingAmount = repayments
-    .filter((r) => r.status === "Pending")
-    .reduce((sum, r) => sum + r.amount, 0);
-
-  const overdueAmount = repayments
-    .filter((r) => r.status === "Overdue")
-    .reduce((sum, r) => sum + r.amount, 0);
+  const totalPaid    = repayments.filter((r) => r.status === "Paid").reduce((s, r) => s + r.amount, 0);
+  const pendingAmt   = repayments.filter((r) => r.status === "Pending").reduce((s, r) => s + r.amount, 0);
+  const overdueAmt   = repayments.filter((r) => r.status === "Overdue").reduce((s, r) => s + r.amount, 0);
 
   return (
     <DashboardLayout>
-      <div className="max-w-6xl mx-auto space-y-8">
+      <div style={{ fontFamily: "'DM Sans', sans-serif", maxWidth: 780, margin: "0 auto", padding: "40px 0 40px" }}>
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+          .rep-row { transition: background 0.15s; }
+          .rep-row:hover { background: rgba(255,255,255,0.03) !important; }
+          .pay-btn { transition: opacity 0.2s, transform 0.2s; }
+          .pay-btn:hover { opacity: 0.85 !important; transform: translateY(-1px); }
+        `}</style>
+
         {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold text-[#001a33]">Repayments</h1>
-          <p className="text-gray-500 text-sm">
+        <div style={{ marginBottom: 32 }}>
+          <p style={{
+            fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase",
+            color: "#10b981", fontFamily: "'DM Mono', monospace", marginBottom: 8,
+          }}>REPAYMENTS</p>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: "#f1f5f9", letterSpacing: "-0.03em", marginBottom: 4 }}>
+            Repayment Schedule
+          </h1>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)" }}>
             Track and manage your loan repayments
           </p>
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <SummaryCard title="Total Paid" value={`₦${totalPaid.toLocaleString()}`} />
-          <SummaryCard title="Pending Amount" value={`₦${pendingAmount.toLocaleString()}`} highlight />
-          <SummaryCard title="Overdue" value={`₦${overdueAmount.toLocaleString()}`} danger />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, marginBottom: 32 }}>
+          {[
+            { label: "Total Paid",   value: `₦${totalPaid.toLocaleString()}`,  accent: "#10b981" },
+            { label: "Pending",      value: `₦${pendingAmt.toLocaleString()}`, accent: "#fbbf24" },
+            { label: "Overdue",      value: `₦${overdueAmt.toLocaleString()}`, accent: "#f87171" },
+          ].map((c) => (
+            <div key={c.label} style={{
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.07)",
+              borderRadius: 12, padding: "18px 20px", position: "relative", overflow: "hidden",
+            }}>
+              <div style={{
+                position: "absolute", top: 0, left: 0, right: 0, height: 1,
+                background: `linear-gradient(90deg, transparent, ${c.accent}55, transparent)`,
+              }} />
+              <p style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", fontFamily: "'DM Mono', monospace", marginBottom: 8 }}>
+                {c.label}
+              </p>
+              <p style={{ fontSize: 22, fontWeight: 700, color: c.accent, letterSpacing: "-0.02em" }}>{c.value}</p>
+            </div>
+          ))}
         </div>
 
-        {/* Repayments Table */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="px-4 py-4 border-b">
-            <h2 className="font-semibold text-[#001a33]">
-              Repayment Schedule
-            </h2>
+        {/* Table */}
+        <div style={{
+          background: "rgba(255,255,255,0.03)",
+          border: "1px solid rgba(255,255,255,0.07)",
+          borderRadius: 14, overflow: "hidden",
+          position: "relative",
+        }}>
+          <div style={{
+            position: "absolute", top: 0, left: 0, right: 0, height: 1,
+            background: "linear-gradient(90deg, transparent, rgba(16,185,129,0.35), transparent)",
+          }} />
+
+          <div style={{ padding: "18px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+            <p style={{ fontSize: 13, fontWeight: 600, color: "#e2e8f0" }}>All Repayments</p>
           </div>
 
-          <div className="overflow-x-auto">
-            {repayments.length > 0 ? (
-              <table className="w-full text-sm">
-                <thead className="bg-gray-50 text-gray-600">
+          {repayments.length > 0 ? (
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+                <thead>
                   <tr>
-                    <th className="px-4 py-3 text-left">Loan ID</th>
-                    <th className="px-4 py-3 text-left">Amount</th>
-                    <th className="px-4 py-3 text-left">Due Date</th>
-                    <th className="px-4 py-3 text-left">Status</th>
-                    <th className="px-4 py-3 text-right">Action</th>
+                    {["Loan ID", "Amount", "Due Date", "Status", "Action"].map((h, i) => (
+                      <th key={h} style={{
+                        padding: "11px 24px",
+                        textAlign: i === 4 ? "right" : "left",
+                        fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase",
+                        color: "rgba(255,255,255,0.3)",
+                        fontFamily: "'DM Mono', monospace",
+                        background: "rgba(0,0,0,0.2)",
+                        fontWeight: 500,
+                        borderBottom: "1px solid rgba(255,255,255,0.06)",
+                      }}>{h}</th>
+                    ))}
                   </tr>
                 </thead>
-
-                <tbody className="divide-y">
-                  {repayments.map((repayment) => (
-                    <tr key={repayment.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 font-medium">
-                        {repayment.loanId}
+                <tbody>
+                  {repayments.map((r) => (
+                    <tr key={r.id} className="rep-row" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+                      <td style={{ padding: "14px 24px", color: "#e2e8f0", fontFamily: "'DM Mono', monospace", fontSize: 12 }}>
+                        {r.loanId}
                       </td>
-                      <td className="px-4 py-3">
-                        ₦{repayment.amount.toLocaleString()}
+                      <td style={{ padding: "14px 24px", color: "#f1f5f9", fontWeight: 600 }}>
+                        ₦{r.amount.toLocaleString()}
                       </td>
-                      <td className="px-4 py-3">{repayment.dueDate}</td>
-                      <td className="px-4 py-3">
-                        <StatusBadge status={repayment.status} />
+                      <td style={{ padding: "14px 24px", color: "rgba(255,255,255,0.4)", fontFamily: "'DM Mono', monospace", fontSize: 12 }}>
+                        {r.dueDate}
                       </td>
-                      <td className="px-4 py-3 text-right">
-                        {repayment.status === "Pending" && (
-                          <button className="px-4 py-2 text-sm rounded-lg bg-[#001a33] text-white font-medium hover:opacity-90 transition">
-                            Pay Now
-                          </button>
+                      <td style={{ padding: "14px 24px" }}>
+                        <RepaymentBadge status={r.status} />
+                      </td>
+                      <td style={{ padding: "14px 24px", textAlign: "right" }}>
+                        {r.status === "Pending" && (
+                          <button className="pay-btn" style={{
+                            padding: "7px 16px", borderRadius: 7, border: "none", cursor: "pointer",
+                            fontSize: 12, fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
+                            background: "linear-gradient(135deg, #10b981, #0d9488)", color: "#fff",
+                            boxShadow: "0 0 14px rgba(16,185,129,0.2)",
+                          }}>Pay Now</button>
                         )}
-                        {repayment.status === "Paid" && (
-                          <span className="text-gray-400 text-xs">Completed</span>
+                        {r.status === "Paid" && (
+                          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.2)", fontFamily: "'DM Mono', monospace" }}>COMPLETED</span>
                         )}
-                        {repayment.status === "Overdue" && (
-                          <button className="px-4 py-2 text-sm rounded-lg bg-red-500/10 text-red-600 font-medium hover:bg-red-500/20 transition">
-                            Pay Overdue
-                          </button>
+                        {r.status === "Overdue" && (
+                          <button className="pay-btn" style={{
+                            padding: "7px 16px", borderRadius: 7, border: "1px solid rgba(248,113,113,0.35)",
+                            cursor: "pointer", fontSize: 12, fontWeight: 600,
+                            fontFamily: "'DM Sans', sans-serif",
+                            background: "rgba(248,113,113,0.08)", color: "#f87171",
+                          }}>Pay Overdue</button>
                         )}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-500">No repayment schedules available yet.</p>
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div style={{ padding: "64px 24px", textAlign: "center" }}>
+              <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, fontFamily: "'DM Mono', monospace" }}>
+                NO REPAYMENT SCHEDULES AVAILABLE
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </DashboardLayout>
   );
 };
 
-/* ---------- Components ---------- */
-
-const SummaryCard: FC<{
-  title: string;
-  value: string;
-  highlight?: boolean;
-  danger?: boolean;
-}> = ({ title, value, highlight, danger }) => (
-  <div
-    className={`rounded-xl p-5 border shadow-sm bg-white ${
-      highlight
-        ? "border-[#001a33]/30"
-        : danger
-        ? "border-red-500/30"
-        : "border-gray-100"
-    }`}
-  >
-    <p className="text-sm text-gray-500">{title}</p>
-    <h3
-      className={`text-xl font-bold mt-1 ${
-        highlight
-          ? "text-[#001a33]"
-          : danger
-          ? "text-red-600"
-          : "text-[#001a33]"
-      }`}
-    >
-      {value}
-    </h3>
-  </div>
-);
-
-const StatusBadge: FC<{ status: Repayment["status"] }> = ({ status }) => {
-  const base = "px-3 py-1 rounded-full text-xs font-medium";
-
-  if (status === "Paid")
-    return (
-      <span className={`${base} bg-[#001a33]/20 text-[#001a33]`}>
-        Paid
-      </span>
-    );
-
-  if (status === "Pending")
-    return (
-      <span className={`${base} bg-yellow-100 text-yellow-700`}>
-        Pending
-      </span>
-    );
-
+const RepaymentBadge: FC<{ status: Repayment["status"] }> = ({ status }) => {
+  const styles: Record<string, { bg: string; color: string; dot: string }> = {
+    Paid:    { bg: "rgba(16,185,129,0.1)",  color: "#10b981", dot: "#10b981" },
+    Pending: { bg: "rgba(245,158,11,0.1)",  color: "#fbbf24", dot: "#fbbf24" },
+    Overdue: { bg: "rgba(248,113,113,0.1)", color: "#f87171", dot: "#f87171" },
+  };
+  const s = styles[status];
   return (
-    <span className={`${base} bg-red-100 text-red-600`}>
-      Overdue
+    <span style={{
+      display: "inline-flex", alignItems: "center", gap: 5,
+      padding: "4px 10px", borderRadius: 20,
+      fontSize: 11, fontWeight: 600, fontFamily: "'DM Mono', monospace",
+      background: s.bg, color: s.color,
+    }}>
+      <span style={{ width: 5, height: 5, borderRadius: "50%", background: s.dot }} />
+      {status}
     </span>
   );
 };
